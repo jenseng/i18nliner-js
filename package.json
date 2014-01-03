@@ -1,0 +1,21 @@
+{
+  "name": "i18nliner",
+  "version": "0.0.1",
+  "author": "Jon Jensen",
+  "homepage": "https://github.com/jenseng/i18nliner-js",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "matchdep": "~0.3.0",
+    "grunt-es6-module-transpiler": "~0.6.0",
+    "mocha": "~1.16.2",
+    "chai": "~1.8.1",
+    "grunt-contrib-clean": "~0.5.0"
+  },
+  "scripts": {
+    "test": "grunt test && mocha tmp/test --recursive"
+  },
+  "dependencies": {
+    "esprima": "~1.0.4",
+    "estraverse": "~1.5.0"
+  }
+}
