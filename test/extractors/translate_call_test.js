@@ -37,12 +37,12 @@ describe("TranslateCall", function() {
     });
 
     // for legacy calls, e.g. I18n.t("key", {defaultValue: "foo"})
-    it("should allow the default to be specified in the options hash", function() {
+    it("should allow the default to be specified in the options object", function() {
       var c = call("key", {defaultValue: "foo"});
       assert.equal(c.defaultValue, "foo");
     });
 
-    it("should ensure options is a hash, if provided", function() {
+    it("should ensure options is an object literal, if provided", function() {
       assert.throws(function() {
         call("key", "value", CallHelpers.UNSUPPORTED_EXPRESSION);
       });
@@ -87,7 +87,7 @@ describe("TranslateCall", function() {
       });
     });
 
-    it("should accept valid hashes", function() {
+    it("should accept valid objects", function() {
       assert.deepEqual(
         call({one: "asdf", other: "qwerty"}, {count: 1}).translations(),
         [["qwerty.one", "asdf"], ["qwerty.other", "qwerty"]]
