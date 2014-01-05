@@ -1,6 +1,5 @@
 import {assert} from "chai";
 import TranslateCall from "../../lib/extractors/translate_call";
-import CallHelpers from "../../lib/extractors/call_helpers";
 import Errors from "../../lib/errors";
 
 describe("TranslateCall", function() {
@@ -33,7 +32,7 @@ describe("TranslateCall", function() {
 
     it("should require a literal default", function() {
       assert.throws(function() {
-        call("key", CallHelpers.UNSUPPORTED_EXPRESSION);
+        call("key.key", TranslateCall.prototype.UNSUPPORTED_EXPRESSION);
       }, Errors.InvalidSignature);
     });
 
@@ -45,7 +44,7 @@ describe("TranslateCall", function() {
 
     it("should ensure options is an object literal, if provided", function() {
       assert.throws(function() {
-        call("key", "value", CallHelpers.UNSUPPORTED_EXPRESSION);
+        call("key", "value", TranslateCall.prototype.UNSUPPORTED_EXPRESSION);
       }, Errors.InvalidSignature);
     });
   });
@@ -113,7 +112,7 @@ describe("TranslateCall", function() {
 
     it("should reject invalid count defaults", function() {
       assert.throws(function() {
-        call({one: "asdf", other: CallHelpers.UNSUPPORTED_EXPRESSION}, {count: 1});
+        call({one: "asdf", other: TranslateCall.prototype.UNSUPPORTED_EXPRESSION}, {count: 1});
       }, Errors.InvalidPluralizationDefault);
     });
 
