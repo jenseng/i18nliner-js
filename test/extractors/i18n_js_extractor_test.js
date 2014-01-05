@@ -1,5 +1,6 @@
 import {assert} from "chai";
 import I18nJsExtractor from "../../lib/extractors/i18n_js_extractor";
+import Errors from "../../lib/errors";
 
 describe("I18nJsExtractor", function() {
   describe(".translations", function() {
@@ -45,19 +46,19 @@ describe("I18nJsExtractor", function() {
     it("should bail on invalid t calls", function() {
       assert.throws(function(){
         extract("I18n.t(foo)");
-      });
+      }, Errors.InvalidSignature);
       assert.throws(function(){
         extract("I18n.t('foo', foo)");
-      });
+      }, Errors.InvalidSignature);
       assert.throws(function(){
         extract("I18n.t('foo', \"hello \" + man)");
-      });
+      }, Errors.InvalidSignature);
       assert.throws(function(){
         extract("I18n.t('a', \"a\", {}, {})");
-      });
+      }, Errors.InvalidSignature);
       assert.throws(function(){
         extract("I18n.t({one: '1', other: '2'})");
-      });
+      }), Errors.InvalidSignature;
     });
   });
 });

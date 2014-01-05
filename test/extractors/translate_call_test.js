@@ -1,6 +1,7 @@
 import {assert} from "chai";
 import TranslateCall from "../../lib/extractors/translate_call";
 import CallHelpers from "../../lib/extractors/call_helpers";
+import Errors from "../../lib/errors";
 
 describe("TranslateCall", function() {
   function call() {
@@ -11,7 +12,7 @@ describe("TranslateCall", function() {
     it("should reject extra arguments", function() {
       assert.throws(function() {
         call("key", "value", {}, "wat");
-      });
+      }, Errors.InvalidSignature);
     });
 
     it("should accept a valid key or default", function() {
@@ -27,13 +28,13 @@ describe("TranslateCall", function() {
     it("should require at least a key or default", function() {
       assert.throws(function() {
         call();
-      });
+      }, Errors.InvalidSignature);
     });
 
     it("should require a literal default", function() {
       assert.throws(function() {
         call("key", CallHelpers.UNSUPPORTED_EXPRESSION);
-      });
+      }, Errors.InvalidSignature);
     });
 
     // for legacy calls, e.g. I18n.t("key", {defaultValue: "foo"})
@@ -45,7 +46,7 @@ describe("TranslateCall", function() {
     it("should ensure options is an object literal, if provided", function() {
       assert.throws(function() {
         call("key", "value", CallHelpers.UNSUPPORTED_EXPRESSION);
-      });
+      }, Errors.InvalidSignature);
     });
   });
 
@@ -101,25 +102,25 @@ describe("TranslateCall", function() {
     it("should reject invalid keys", function() {
       assert.throws(function() {
         call({one: "asdf", twenty: "qwerty"}, {count: 1});
-      });
+      }, Errors.InvalidPluralizationKey);
     });
 
     it("should require essential keys", function() {
       assert.throws(function() {
         call({one: "asdf"}, {count: 1});
-      });
+      }, Errors.MissingPluralizationKey);
     });
 
     it("should reject invalid count defaults", function() {
       assert.throws(function() {
         call({one: "asdf", other: CallHelpers.UNSUPPORTED_EXPRESSION}, {count: 1});
-      });
+      }, Errors.InvalidPluralizationDefault);
     });
 
     it("should complain if no :count is provided", function() {
       assert.throws(function() {
         call({one: "asdf", other: "qwerty"});
-      });
+      }, Errors.MissingCountValue);
     });
   });
 
@@ -127,13 +128,13 @@ describe("TranslateCall", function() {
     it("should require all interpolation values", function() {
       assert.throws(function() {
         call("asdf %{bob}");
-      });
+      }, Errors.MissingInterpolationValue);
     });
 
     it("should require all interpolation values in count defaults", function() {
       assert.throws(function() {
         call({one: "asdf %{bob}", other: "querty"});
-      });
+      }, Errors.MissingInterpolationValue);
     });
   });
 });
