@@ -43,7 +43,15 @@ module.exports = function(grunt){
         newcap: true,
         nonew: true,
         unused: true,
-        trailing: true,
+        trailing: true
+      }
+    },
+
+    browserify: {
+      dist: {
+        files: {
+          'build/i18n_js_extension.js': ['tmp/lib/extensions/i18n_js_build.js']
+        }
       }
     }
   });
