@@ -66,6 +66,3 @@ describe("I18nJs extension", function() {
     });
   });
 });
-
-
-
