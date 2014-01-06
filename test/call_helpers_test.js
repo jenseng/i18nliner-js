@@ -1,3 +1,4 @@
+/* global describe, it */
 import {assert} from "chai";
 import CallHelpers from "../lib/call_helpers";
 

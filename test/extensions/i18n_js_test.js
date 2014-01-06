@@ -1,3 +1,4 @@
+/* global describe, it */
 import {assert} from "chai";
 import sinon from "sinon";
 import extend from "../../lib/extensions/i18n_js";

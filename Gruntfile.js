@@ -1,3 +1,4 @@
+/* global require, module */
 var matchdep = require('matchdep');
 
 module.exports = function(grunt){
@@ -31,7 +32,18 @@ module.exports = function(grunt){
     jshint: {
       all: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*.js'],
       options: {
-        esnext: true
+        esnext: true,
+        camelcase: true,
+        eqeqeq: true,
+        forin: true,
+        immed: true,
+        indent: 2,
+        undef: true,
+        latedef: true,
+        newcap: true,
+        nonew: true,
+        unused: true,
+        trailing: true,
       }
     }
   });
