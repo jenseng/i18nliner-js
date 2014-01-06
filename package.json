@@ -10,7 +10,9 @@
     "mocha": "~1.16.2",
     "chai": "~1.8.1",
     "grunt-contrib-clean": "~0.5.0",
-    "sinon": "~1.7.3"
+    "sinon": "~1.7.3",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jshint": "~0.8.0"
   },
   "scripts": {
     "test": "grunt test && mocha tmp/test --recursive"

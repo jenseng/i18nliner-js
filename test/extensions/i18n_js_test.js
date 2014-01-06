@@ -13,13 +13,14 @@ describe("I18nJs extension", function() {
       var placeholder;
       if (!matches)
         return string;
-      for (var i = 0; placeholder = matches[i]; i++) {
+      for (var i = 0, len = matches.length; i < len; i++) {
+        placeholder = matches[i];
         var name = placeholder.replace(this.PLACEHOLDER, "$1");
         string = string.replace(placeholder, options[name]);
       }
       return string;
     }
-  }
+  };
   extend(I18n);
 
   describe("translate", function() {

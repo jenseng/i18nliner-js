@@ -26,6 +26,13 @@ module.exports = function(grunt){
         dest: 'tmp/test',
         compatFix: true
       }
+    },
+
+    jshint: {
+      all: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*.js'],
+      options: {
+        esnext: true
+      }
     }
   });
 

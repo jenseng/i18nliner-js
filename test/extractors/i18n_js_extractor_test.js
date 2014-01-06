@@ -5,10 +5,10 @@ import Errors from "../../lib/errors";
 describe("I18nJsExtractor", function() {
   describe(".translations", function() {
     function extract(source, scope, options) {
-      var extractor = new I18nJsExtractor({source: source})
+      var extractor = new I18nJsExtractor({source: source});
       extractor.run();
       return extractor.translations;
-    };
+    }
 
     it("should ignore non-t calls", function() {
       assert.deepEqual(
@@ -58,7 +58,7 @@ describe("I18nJsExtractor", function() {
       }, Errors.InvalidSignature);
       assert.throws(function(){
         extract("I18n.t({one: '1', other: '2'})");
-      }), Errors.InvalidSignature;
+      }, Errors.MissingCountValue);
     });
   });
 });
