@@ -1,8 +1,13 @@
 {
   "name": "i18nliner",
+  "description": "i18n made simple",
   "version": "0.0.1",
   "author": "Jon Jensen",
   "homepage": "https://github.com/jenseng/i18nliner-js",
+  "main": "./lib/main",
+  "bin": {
+    "i18nliner": "./bin/i18nliner.js"
+  },
   "devDependencies": {
     "grunt": "~0.4.2",
     "matchdep": "~0.3.0",
