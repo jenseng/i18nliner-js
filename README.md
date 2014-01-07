@@ -1,11 +1,9 @@
-# i18nliner-js
+# I18nliner.js
 
-[i18nliner](https://github.com/jenseng/i18nliner), but for js :)
+[<img src="https://secure.travis-ci.org/jenseng/i18nliner-js.png"
+/>](http://travis-ci.org/jenseng/i18nliner-js)
 
-can either be used with [i18n_js](https://github.com/fnando/i18n-js)
-or [i18next](https://github.com/jamuhl/i18next)
-
-using handlebars? check out [i18nliner-handlebars](https://github.com/fivetanley/i18ninliner-handlebars)
+yay readme-driven development!
 
 ## TODO
 
@@ -15,4 +13,280 @@ using handlebars? check out [i18nliner-handlebars](https://github.com/fivetanley
   * simpler arity (key optional)
   * wrapper support
   * audit html-escaping code, PR or monkeypatch if insufficient
-* extractor/checker cli so that i18nliner(.rb) can merge translations
+* extractor/checker/etc cli
+  * format/output options so that i18nliner(.rb) can merge translations
+
+====
+
+I18nliner is I18n made simple.
+
+No .js / .json translation files. Easy inline defaults. Optional keys. Easy
+pluralization. Wrappers for HTML-free translations.
+
+I18nliner extends both [i18n.js](https://github.com/fnando/i18n-js) and
+[i18next](https://github.com/jamuhl/i18next), so you can add it to an
+already-internationalized app that uses either of them. 
+
+## TL;DR
+
+I18nliner lets you do stuff like this:
+
+```javascript
+I18n.t("Ohai %{user}, my default translation is right here in the code. \
+  Inferred keys, oh my!", {user: user.name});
+```
+
+and this:
+
+```javascript
+I18n.t("*Translators* won't see any markup!",
+  {wrappers: ['<a href="/translators">$1</em>']});
+```
+
+Best of all, you don't need to maintain translation files anymore;
+I18nliner will do it for you.
+
+## Installation
+
+To install the command-line tools (for extracting/managing
+translations), use npm (see below).
+
+Depending on how you manage JavaScript dependencies in your app (and
+which I18n lib you use), you have several options for
+installing/including the runtime extensions:
+
+### npm
+
+```bash
+npm install i18nliner --save
+```
+
+### bower
+
+```bash
+bower install --save i18nliner
+```
+
+### Download
+
+#### i18n.js
+
+Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18n_js_extensions.js)
+and include them on the page after i18n.js.
+
+#### i18next
+
+Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18next_extension.js)
+(AMD) and require it in your app after you require i18next.
+
+## Features
+
+### No more .js/.json translation files
+
+Instead of maintaining .js/.json files and doing stuff like this:
+
+```javascript
+I18n.t('account_page_title');
+```
+
+Forget the translation file and just do:
+
+```javascript
+I18n.t('account_page_title', "My Account");
+```
+
+Regular I18n options follow the (optional) default translation, so you can do
+the usual stuff (placeholders, etc.).
+
+#### Okay, but don't the translators need them?
+
+Sure, but *you* don't need to write them. Just run:
+
+```bash
+i18nliner dump
+```
+
+This extracts all default translations from your codebase, merges them with any
+other ones (from pre-existing translation files), and outputs them to
+`locales/generated/translations.json` (or `.js` if using i18n.js)
+
+### It's okay to lose your keys
+
+Why waste time coming up with keys that are less descriptive than the default
+translation? I18nliner makes keys optional, so you can just do this:
+
+```javascript
+I18n.t("My Account")
+```
+
+I18nliner will create a [unique key](CONFIG.md) based on the translation (e.g.
+`'my_account'`), so you don't have to.
+
+This can actually be a **good thing**, because when the `en` changes, the key
+changes, which means you know you need to get it retranslated (instead of
+letting a now-inaccurate translation hang out indefinitely). Whether you want
+to show "[ missing translation ]" or the `en` value in the meantime is up to
+you.
+
+### Wrappers
+
+Suppose you have something like this in your JavaScript:
+
+```javascript
+var string = 'You can <a href="/new">lead</a> a new discussion or \
+  <a href="/search">join</a> an existing one.';
+```
+
+You might say "No, I'd use handlebars". Bear with me here, we're trying to
+make this easy for you *and* the translators :). For I18n, you might try
+something like this:
+
+```javascript
+var string = I18n.t('You can %{lead} a new discussion or %{join} an \
+  existing one.', {
+    lead: '<a href="/new">' + I18n.t('lead') + '</a>',
+    join: '<a href="/search"> + 'I18n.t('join') + '</a>')
+  });
+```
+
+This is not great, because:
+
+1. There are three strings to translate.
+2. When translating the verbs, the translator has no context for where it's
+   being used... Is "lead" a verb or a noun?
+3. Translators have their hands somewhat tied as far as what is inside the
+   links and what is not.
+
+So you might try this instead:
+
+```javascript
+var string = I18n.t('You can <a href="%{leadUrl}">lead</a> a new \
+  discussion or <a href="%{joinUrl}">join</a> an existing one.', {
+    leadUrl: "/new",
+    joinUrl: "/search"
+  });
+```
+
+This isn't much better, because now you have HTML in your translations. If you
+want to add a class to the link, you have to go update all the translations.
+A translator could accidentally break your page (or worse, cross-site script
+it).
+
+So what do you do?
+
+I18nliner lets you specify wrappers, so you can keep HTML out the translations,
+while still just having a single string needing translation:
+
+```javascript
+var string = I18n.t('You can *lead* a new discussion or **join** an \
+  existing one.', {
+    wrappers: [
+      '<a href="/new">$1</a>',
+      '<a href="/search>$1</a>'
+    ]
+  });
+```
+
+Default delimiters are increasing numbers of asterisks, but you can specify
+any string as a delimiter by using a object rather than an array.
+
+#### HTML Safety
+
+I18nliner ensures translations, interpolated values, and wrappers all play
+nicely (and safely) when it comes to HTML escaping. Wrappers are assumed
+to be HTML-safe, so everything else that is unsafe will get
+automatically escaped. If you are using i18n.js, you can hint that an
+interpolation value is already HTML-safe via `%h{...}` (for i18next, use
+the HTML__ suffix), e.g.
+
+```javascript
+I18n.t("If you type %{input} you get %h{input}", {input: "<input>"});
+=> "If you type &lt;input&gt; you get <input>"
+```
+
+If any interpolated value or wrapper is HTML-safe, everything else will be HTML-
+escaped.
+
+### Inline Pluralization Support
+
+Pluralization can be tricky, but i18next and i18n.js give you some
+flexibility. I18nliner brings this inline with a default translation
+object, e.g.
+
+```javascript
+I18n.t({one: "There is one light!", other: "There are %{count} lights!"},
+  {count: picard.visibleLights.length});
+```
+
+Note that the `count` interpolation value needs to be explicitly set when doing
+pluralization.
+
+If you just want to pluralize a single word, there's a shortcut:
+
+```javascript
+I18n.t("person", {count: users.length});
+```
+
+This is equivalent to:
+
+```javascript
+I18n.t({one: "1 person", other: "%{count} people"},
+  {count: users.length});
+```
+
+## Command Line Utility
+
+### i18nliner check
+
+Ensures that there are no problems with your translate calls (e.g. missing
+interpolation values, reusing a key for a different translation, etc.). **Go
+add this to your Jenkins/Travis tasks.**
+
+### i18nliner dump
+
+Does an `i18nliner check`, and then extracts all default translations from your
+codebase, merges them with any other translation files, and outputs them to
+`locales/generated/translations.json` (or `.js`).
+
+### i18nliner diff
+
+Does an `i18nliner dump` and creates a diff from a previous one (path or git
+commit hash). This is useful if you only want to see what has changed since a
+previous release of your app.
+
+### i18nliner import
+
+Imports a translated .json/.js file. Ensures that all placeholders and
+wrappers are present.
+
+#### .i18nignore and more
+
+By default, the check and dump tasks will look for inline translations in any
+.js files. You can tell it to always skip certain
+files/directories/patterns by creating a .i18nignore file. The syntax is the
+same as [.gitignore](http://www.kernel.org/pub/software/scm/git/docs/gitignore.html),
+though it supports
+[a few extra things](https://github.com/jenseng/globby#compatibility-notes).
+
+If you only want to check a particular file/directory/pattern, you can set the
+`--only` option when you run the command, e.g.
+
+```bash
+i18nliner check --only=/app/**/user*
+```
+
+## Compatibility
+
+I18nliner is backwards compatible with i18next and i18n.js, so you can
+add it to an established (and already internationalized) app. Your
+existing translation calls, keys and translation files will still just
+work without modification.
+
+## Related Projects
+
+* [i18nliner (ruby)](https://github.com/jenseng/i18nliner)
+* [i18nliner-handlrbars](https://github.com/fivetanley/i18ninliner-handlrbars)
+
+## License
+
+Copyright (c) 2014 Jon Jensen, released under the MIT license
