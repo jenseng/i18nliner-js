@@ -2,6 +2,7 @@
 import {assert} from "chai";
 import TranslateCall from "../../lib/extractors/translate_call";
 import Errors from "../../lib/errors";
+import I18nliner from "../../lib/i18nliner";
 
 describe("TranslateCall", function() {
   function call() {
@@ -52,10 +53,30 @@ describe("TranslateCall", function() {
 
   describe("key inference", function() {
     it("should generate literal keys", function() {
-      assert.deepEqual(
-        call("zomg key").translations(),
-        [["zomg key", "zomg key"]]
-      );
+      I18nliner.set('inferredKeyFormat', 'literal', function() {
+        assert.deepEqual(
+          call("zomg key").translations(),
+          [["zomg key", "zomg key"]]
+        );
+      });
+    });
+
+    it("should generate underscored keys", function() {
+      I18nliner.set('inferredKeyFormat', 'underscored', function() {
+        assert.deepEqual(
+          call("zOmg key!!").translations(),
+          [["zomg_key", "zOmg key!!"]]
+        );
+      });
+    });
+
+    it("should generate underscored + crc32 keys", function() {
+      I18nliner.set('inferredKeyFormat', 'underscored_crc32', function() {
+        assert.deepEqual(
+          call("zOmg key!!").translations(),
+          [["zomg_key_90a85b0b", "zOmg key!!"]]
+        );
+      });
     });
   });
 
@@ -71,13 +92,9 @@ describe("TranslateCall", function() {
   describe("pluralization", function() {
     describe("defaults", function() {
       it("should be inferred", function() {
-        assert.deepEqual(
-          call("person", {count: 1}).translations(),
-          [
-            ["person.one", "1 person"],
-            ["person.other", "%{count} people"]
-          ]
-        );
+        var result = call("person", {count: 1}).translations();
+        assert.equal(result[0][1], "1 person");
+        assert.equal(result[1][1], "%{count} people");
       });
 
       it("should not be inferred if given multiple words", function() {
@@ -91,7 +108,7 @@ describe("TranslateCall", function() {
     it("should accept valid objects", function() {
       assert.deepEqual(
         call({one: "asdf", other: "qwerty"}, {count: 1}).translations(),
-        [["qwerty.one", "asdf"], ["qwerty.other", "qwerty"]]
+        [["qwerty_98185351.one", "asdf"], ["qwerty_98185351.other", "qwerty"]]
       );
       assert.deepEqual(
         call("some_stuff", {one: "asdf", other: "qwerty"}, {count: 1}).translations(),

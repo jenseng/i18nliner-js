@@ -9,7 +9,6 @@ using handlebars? check out [i18nliner-handlebars](https://github.com/fivetanley
 
 ## TODO
 
-* more key inference options (underscore, underscore+hash)
 * i18n_js gem (so that people don't have to manually add it to assets or
   worry about versions)
 * [i18next](https://github.com/jamuhl/i18next) support

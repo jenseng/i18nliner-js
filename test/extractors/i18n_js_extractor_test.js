@@ -28,7 +28,7 @@ describe("I18nJsExtractor", function() {
     it("should extract valid t calls", function() {
       assert.deepEqual(
         extract("I18n.t('Foo')"),
-        {Foo: "Foo"}
+        {"foo_f44ad75d": "Foo"}
       );
       assert.deepEqual(
         extract("I18n.t('bar', 'Baz')"),
@@ -40,7 +40,7 @@ describe("I18nJsExtractor", function() {
       );
       assert.deepEqual(
         extract("I18n.t({one: 'just one', other: 'zomg lots'}, {count: 1})"),
-        {"zomg lots.one": "just one", "zomg lots.other": "zomg lots"}
+        {"zomg_lots_a54248c9.one": "just one", "zomg_lots_a54248c9.other": "zomg lots"}
       );
     });
 

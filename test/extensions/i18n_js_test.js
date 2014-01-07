@@ -32,7 +32,7 @@ describe("I18nJs extension", function() {
         "Hello bob"
       );
       assert.deepEqual(
-        ["Hello %{name}", {defaultValue: "Hello %{name}", name: "bob"}],
+        ["hello_name_84ff273f", {defaultValue: "Hello %{name}", name: "bob"}],
         spy.args[0]
       );
       spy.restore();
