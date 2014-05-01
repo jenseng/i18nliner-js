@@ -4,6 +4,10 @@
   "version": "0.0.1",
   "author": "Jon Jensen",
   "homepage": "https://github.com/jenseng/i18nliner-js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/jenseng/i18nliner-js.git"
+  },
   "main": "./lib/main",
   "bin": {
     "i18nliner": "./bin/i18nliner.js"
