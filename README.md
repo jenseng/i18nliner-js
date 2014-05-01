@@ -285,7 +285,7 @@ work without modification.
 ## Related Projects
 
 * [i18nliner (ruby)](https://github.com/jenseng/i18nliner)
-* [i18nliner-handlrbars](https://github.com/fivetanley/i18ninliner-handlrbars)
+* [i18nliner-handlebars](https://github.com/fivetanley/i18nliner-handlebars)
 
 ## License
 
