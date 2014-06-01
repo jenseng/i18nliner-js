@@ -53,9 +53,19 @@ module.exports = function(grunt){
           'build/i18n_js_extension.js': ['tmp/lib/extensions/i18n_js_build.js']
         }
       }
+    },
+
+    copy: {
+      main: {
+        cwd: 'tmp/lib/',
+        src: '**',
+        dest: 'dist/lib/',
+        expand: true
+      }
     }
   });
 
   grunt.registerTask('test', [ 'clean', 'transpile:testLib', 'transpile:tests' ]);
   grunt.registerTask('default', [ 'transpile:testLib', 'transpile:tests' ]);
+  grunt.registerTask('dist', ['test', 'copy']);
 };
