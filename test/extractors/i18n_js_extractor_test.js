@@ -8,7 +8,7 @@ describe("I18nJsExtractor", function() {
     function extract(source) {
       var extractor = new I18nJsExtractor({source: source});
       extractor.run();
-      return extractor.translations;
+      return extractor.translations.translations;
     }
 
     it("should ignore non-t calls", function() {
@@ -36,11 +36,11 @@ describe("I18nJsExtractor", function() {
       );
       assert.deepEqual(
         extract("I18n.translate('one', {one: '1', other: '2'}, {count: 1})"),
-        {"one.one": "1", "one.other": "2"}
+        {one: {one: "1", other: "2"}}
       );
       assert.deepEqual(
         extract("I18n.t({one: 'just one', other: 'zomg lots'}, {count: 1})"),
-        {"zomg_lots_a54248c9.one": "just one", "zomg_lots_a54248c9.other": "zomg lots"}
+        {"zomg_lots_a54248c9": {one: "just one", other: "zomg lots"}}
       );
     });
 
