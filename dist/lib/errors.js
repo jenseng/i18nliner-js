@@ -15,5 +15,7 @@ addError('InvalidPluralizationDefault');
 addError('MissingInterpolationValue');
 addError('MissingCountValue');
 addError('InvalidOptionKey');
+addError('KeyAsScope');
+addError('KeyInUse');
 
 exports["default"] = Errors;

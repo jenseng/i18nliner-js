@@ -4,6 +4,7 @@ var estraverse = require("estraverse")["default"] || require("estraverse");
 var TranslateCall = require("./translate_call")["default"] || require("./translate_call");
 var Utils = require("../utils")["default"] || require("../utils");
 var CallHelpers = require("../call_helpers")["default"] || require("../call_helpers");
+var TranslationHash = require("./translation_hash")["default"] || require("./translation_hash");
 
 function I18nJsExtractor(options) {
   this.source = options.source;
@@ -12,7 +13,7 @@ function I18nJsExtractor(options) {
 Utils.extend(I18nJsExtractor.prototype, CallHelpers);
 
 I18nJsExtractor.prototype.run = function() {
-  this.translations = {};
+  this.translations = new TranslationHash();
 
   var ast = esprima.parse(this.source, {loc: true});
   estraverse.traverse(ast, {
@@ -73,7 +74,7 @@ I18nJsExtractor.prototype.processTranslateCall = function(line, receiver, method
   var call = new TranslateCall(line, method, args);
   var translations = call.translations();
   for (var i = 0, len = translations.length; i < len; i++)
-    this.translations[translations[i][0]] = translations[i][1];
+    this.translations.set(translations[i][0], translations[i][1]);
 };
 
 I18nJsExtractor.prototype.objectFrom = function(node) {
