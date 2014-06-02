@@ -25,7 +25,7 @@ pluralization. Wrappers for HTML-free translations.
 
 I18nliner extends both [i18n.js](https://github.com/fnando/i18n-js) and
 [i18next](https://github.com/jamuhl/i18next), so you can add it to an
-already-internationalized app that uses either of them. 
+already-internationalized app that uses either of them.
 
 ## TL;DR
 
@@ -119,8 +119,9 @@ translation? I18nliner makes keys optional, so you can just do this:
 I18n.t("My Account")
 ```
 
-I18nliner will create a [unique key](CONFIG.md) based on the translation (e.g.
-`'my_account'`), so you don't have to.
+I18nliner will create a unique key based on the translation (e.g.
+`'my_account'`), so you don't have to. See `I18nliner.inferred_key_format` for
+more information.
 
 This can actually be a **good thing**, because when the `en` changes, the key
 changes, which means you know you need to get it retranslated (instead of
