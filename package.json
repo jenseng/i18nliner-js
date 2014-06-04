@@ -29,9 +29,11 @@
     "test": "grunt test && mocha tmp/test --recursive"
   },
   "dependencies": {
+    "cli-color": "^0.3.2",
+    "crc32": "~0.2.2",
     "esprima": "~1.0.4",
     "estraverse": "~1.5.0",
-    "crc32": "~0.2.2",
+    "glob": "^4.0.2",
     "speakingurl": "~0.8.2"
   }
 }

@@ -23,14 +23,14 @@ module.exports = function(grunt){
         expand: true,
         type: 'cjs',
         cwd: 'test',
-        src: [ '**/*.js' ],
+        src: [ '**/*.js', '!fixtures/**/*.js' ],
         dest: 'tmp/test',
         compatFix: true
       }
     },
 
     jshint: {
-      all: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*.js'],
+      all: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*_test.js'],
       options: {
         esnext: true,
         camelcase: true,
