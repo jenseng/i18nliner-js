@@ -9,7 +9,7 @@ describe('Check', function() {
     it("should find errors", function() {
       I18nliner.set('basePath', "test/fixtures", function() {
         var checker = new Check({silent: true});
-        checker.checkFiles();
+        checker.run();
         assert.deepEqual(
           checker.translations.translations,
           {"welcome_name_4c6ebc3a": 'welcome, %{name}'}
