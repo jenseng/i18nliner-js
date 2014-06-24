@@ -64,8 +64,8 @@ describe("TranslateCall", function() {
     it("should generate underscored keys", function() {
       I18nliner.set('inferredKeyFormat', 'underscored', function() {
         assert.deepEqual(
-          call("zOmg key!!").translations(),
-          [["zomg_key", "zOmg key!!"]]
+          call("zOmg -- key!!").translations(),
+          [["zomg_key", "zOmg -- key!!"]]
         );
       });
     });
