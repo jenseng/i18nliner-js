@@ -4,10 +4,12 @@ var CallHelpers = require("./call_helpers")["default"] || require("./call_helper
 var Errors = require("./errors")["default"] || require("./errors");
 var TranslateCall = require("./extractors/translate_call")["default"] || require("./extractors/translate_call");
 var TranslationHash = require("./extractors/translation_hash")["default"] || require("./extractors/translation_hash");
+var Commands = require("./commands")["default"] || require("./commands");
 
 I18nliner.CallHelpers = CallHelpers;
 I18nliner.Errors = Errors;
 I18nliner.TranslateCall = TranslateCall;
 I18nliner.TranslationHash = TranslationHash;
+I18nliner.Commands = Commands;
 
 exports["default"] = I18nliner;
