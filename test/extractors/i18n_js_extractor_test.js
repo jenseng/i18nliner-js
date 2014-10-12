@@ -31,6 +31,10 @@ describe("I18nJsExtractor", function() {
         {"foo_f44ad75d": "Foo"}
       );
       assert.deepEqual(
+        extract("I18n.t('Foo ' + 'Bar')"),
+        {"foo_bar_6c8e5736": "Foo Bar"}
+      );
+      assert.deepEqual(
         extract("I18n.t('bar', 'Baz')"),
         {bar: "Baz"}
       );

@@ -76,6 +76,8 @@ I18nJsExtractor.prototype.evaluateExpression = function(node, identifierToString
     return node.name;
   if (node.type === "ObjectExpression")
     return this.objectFrom(node);
+  if (node.type === "BinaryExpression" && node.operator === "+")
+    return this.stringFromConcatenation(node);
   return this.UNSUPPORTED_EXPRESSION;
 };
 
@@ -99,6 +101,14 @@ I18nJsExtractor.prototype.objectFrom = function(node) {
     object[key] = this.evaluateExpression(prop.value);
   }
   return object;
+};
+
+I18nJsExtractor.prototype.stringFromConcatenation = function(node) {
+  var left = this.evaluateExpression(node.left);
+  var right = this.evaluateExpression(node.right);
+  if (typeof left !== "string" || typeof right !== "string")
+    return this.UNSUPPORTED_EXPRESSION;
+  return left + right;
 };
 
 exports["default"] = I18nJsExtractor;
