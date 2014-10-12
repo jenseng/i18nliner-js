@@ -82,7 +82,7 @@ TranslateCall.prototype.normalizeArguments = function(args) {
   if (!args.length)
     throw new Errors.InvalidSignature(this.line, args);
 
-  var others = this.inferArguments(args.slice());
+  var others = this.inferArguments(args.slice(), false);
   var key = this.key = others.shift();
   var options = this.options = others.shift();
 
