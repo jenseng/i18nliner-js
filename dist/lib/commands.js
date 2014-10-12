@@ -2,6 +2,7 @@
 /* global process */
 
 var Check = require("./commands/check")["default"] || require("./commands/check");
+var Export = require("./commands/export")["default"] || require("./commands/export");
 
 var error = process.stdout.write;
 
@@ -27,7 +28,8 @@ var Commands = {
     return false;
   },
 
-  Check: Check
+  Check: Check,
+  Export: Export
 };
 
 exports["default"] = Commands;
