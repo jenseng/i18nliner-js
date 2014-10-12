@@ -18,7 +18,7 @@ function addError(name) {
       for (var i = 0; i < details.length; i++) {
         part = details[i];
         part = part === CallHelpers.UNSUPPORTED_EXPRESSION ?
-          "<unsupport expression>" :
+          "<unsupported expression>" :
           JSON.stringify(part);
         parts.push(part);
       }
