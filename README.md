@@ -3,29 +3,21 @@
 [<img src="https://secure.travis-ci.org/jenseng/i18nliner-js.png"
 />](http://travis-ci.org/jenseng/i18nliner-js)
 
-yay readme-driven development!
-
 ## TODO
 
-* i18n_js gem (so that people don't have to manually add it to assets or
-  worry about versions)
-* [i18next](https://github.com/jamuhl/i18next) support
-  * simpler arity (key optional)
-  * wrapper support
-  * audit html-escaping code, PR or monkeypatch if insufficient
-* extractor/checker/etc cli
-  * format/output options so that i18nliner(.rb) can merge translations
+* i18nliner_js gem (will register itself w/ i18nliner(.rb), etc)
+* bowerify
+* extractor/checker/etc cli (right now there's just grunt)
 
 ====
 
 I18nliner is I18n made simple.
 
-No .js / .json translation files. Easy inline defaults. Optional keys. Easy
+No .js/yml translation files. Easy inline defaults. Optional keys. Easy
 pluralization. Wrappers for HTML-free translations.
 
-I18nliner extends both [i18n.js](https://github.com/fnando/i18n-js) and
-[i18next](https://github.com/jamuhl/i18next), so you can add it to an
-already-internationalized app that uses either of them.
+I18nliner extends [i18n.js](https://github.com/fnando/i18n-js), so you can
+add it to an already-internationalized app that uses it.
 
 ## TL;DR
 
@@ -51,9 +43,8 @@ I18nliner will do it for you.
 To install the command-line tools (for extracting/managing
 translations), use npm (see below).
 
-Depending on how you manage JavaScript dependencies in your app (and
-which I18n lib you use), you have several options for
-installing/including the runtime extensions:
+Depending on how you manage JavaScript dependencies in your app, you have
+several options for installing/including the runtime extensions:
 
 ### npm
 
@@ -69,21 +60,14 @@ bower install --save i18nliner
 
 ### Download
 
-#### i18n.js
-
 Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18n_js_extensions.js)
 and include them on the page after i18n.js.
 
-#### i18next
-
-Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18next_extension.js)
-(AMD) and require it in your app after you require i18next.
-
 ## Features
 
-### No more .js/.json translation files
+### No more .js/.yml translation files
 
-Instead of maintaining .js/.json files and doing stuff like this:
+Instead of maintaining .js/.yml files and doing stuff like this:
 
 ```javascript
 I18n.t('account_page_title');
@@ -197,8 +181,7 @@ I18nliner ensures translations, interpolated values, and wrappers all play
 nicely (and safely) when it comes to HTML escaping. Wrappers are assumed
 to be HTML-safe, so everything else that is unsafe will get
 automatically escaped. If you are using i18n.js, you can hint that an
-interpolation value is already HTML-safe via `%h{...}` (for i18next, use
-the HTML__ suffix), e.g.
+interpolation value is already HTML-safe via `%h{...}`, e.g.
 
 ```javascript
 I18n.t("If you type %{input} you get %h{input}", {input: "<input>"});
@@ -210,9 +193,8 @@ escaped.
 
 ### Inline Pluralization Support
 
-Pluralization can be tricky, but i18next and i18n.js give you some
-flexibility. I18nliner brings this inline with a default translation
-object, e.g.
+Pluralization can be tricky, but i18n.js gives you some flexibility.
+I18nliner brings this inline with a default translation object, e.g.
 
 ```javascript
 I18n.t({one: "There is one light!", other: "There are %{count} lights!"},
@@ -278,10 +260,9 @@ i18nliner check --only=/app/**/user*
 
 ## Compatibility
 
-I18nliner is backwards compatible with i18next and i18n.js, so you can
-add it to an established (and already internationalized) app. Your
-existing translation calls, keys and translation files will still just
-work without modification.
+I18nliner is backwards compatible with i18n.js, so you can add it to an
+established (and already internationalized) app. Your existing
+translation calls, keys and translation files will still just work without modification.
 
 ## Related Projects
 
