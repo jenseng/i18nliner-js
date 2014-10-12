@@ -80,15 +80,6 @@ describe("TranslateCall", function() {
     });
   });
 
-  describe("normalization", function() {
-    it("should strip whitespace from defaults", function() {
-      assert.equal(
-        call("\t whitespace \n\t ").translations()[0][1],
-        "whitespace"
-      );
-    });
-  });
-
   describe("pluralization", function() {
     describe("defaults", function() {
       it("should be inferred", function() {

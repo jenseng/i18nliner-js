@@ -12,8 +12,6 @@ var CallHelpers = {
 
   normalizeDefault: function(defaultValue, translateOptions) {
     defaultValue = this.inferPluralizationHash(defaultValue, translateOptions);
-    if (typeof defaultValue === 'string')
-      defaultValue = defaultValue.replace(/^\s+|\s+$/g, "");
     return defaultValue;
   },
 
