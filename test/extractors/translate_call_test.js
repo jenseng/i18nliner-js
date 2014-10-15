@@ -137,6 +137,11 @@ describe("TranslateCall", function() {
       assert.throws(function() {
         call("asdf %{bob}");
       }, Errors.MissingInterpolationValue);
+
+      // only throw if it's not set
+      assert.doesNotThrow(function() {
+        call("asdf %{bob}", {bob: ""});
+      });
     });
 
     it("should require all interpolation values in count defaults", function() {

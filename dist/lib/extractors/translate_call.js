@@ -107,7 +107,7 @@ TranslateCall.prototype.validateInterpolationValues = function(key, defaultValue
   var placeholder;
   while ((match = pattern.exec(defaultValue)) !== null) {
     placeholder = match[1];
-    if (!options[placeholder])
+    if (!(placeholder in options))
       throw new Errors.MissingInterpolationValue(this.line, placeholder);
   }
 };
