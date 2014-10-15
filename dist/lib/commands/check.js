@@ -33,12 +33,14 @@ function chdir(dir, cb) {
 function Check(options) {
   GenericCommand.call(this, options);
   this.errors = [];
-  this.translations = new TranslationHash();
+  this.translations = new this.TranslationHash();
   this.setUpProcessors();
 }
 
 Check.prototype = Object.create(GenericCommand.prototype);
 Check.prototype.constructor = Check;
+
+Check.prototype.TranslationHash = TranslationHash;
 
 Check.prototype.setUpProcessors = function() {
   this.processors = [];

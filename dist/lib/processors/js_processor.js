@@ -10,11 +10,12 @@ function JsProcessor(translations, options) {
 JsProcessor.prototype = Object.create(AbstractProcessor.prototype);
 JsProcessor.prototype.constructor = JsProcessor;
 JsProcessor.prototype.defaultPattern = "**/*.js";
+JsProcessor.prototype.I18nJsExtractor = I18nJsExtractor;
 
 JsProcessor.prototype.checkContents = function(source) {
-  var extractor = new I18nJsExtractor({source: this.preProcess(source)});
-  extractor.forEach(function(key, value) {
-    this.translations.set(key, value);
+  var extractor = new this.I18nJsExtractor({source: this.preProcess(source)});
+  extractor.forEach(function(key, value, meta) {
+    this.translations.set(key, value, meta);
     this.translationCount++;
   }.bind(this));
 };

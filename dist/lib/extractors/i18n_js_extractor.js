@@ -92,7 +92,7 @@ I18nJsExtractor.prototype.processTranslateCall = function(line, receiver, method
   var call = this.buildTranslateCall(line, method, args);
   var translations = call.translations();
   for (var i = 0, len = translations.length; i < len; i++)
-    this.handler(translations[i][0], translations[i][1]);
+    this.handler(translations[i][0], translations[i][1], call);
 };
 
 I18nJsExtractor.prototype.objectFrom = function(node) {
