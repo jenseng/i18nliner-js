@@ -4,7 +4,7 @@
 var Check = require("./commands/check")["default"] || require("./commands/check");
 var Export = require("./commands/export")["default"] || require("./commands/export");
 
-var error = process.stdout.write;
+var error = process.stderr.write.bind(process.stderr);
 
 function capitalize(string) {
   return typeof(string) === "string" && string ?
