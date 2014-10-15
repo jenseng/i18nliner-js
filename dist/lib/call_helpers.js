@@ -93,7 +93,7 @@ var CallHelpers = {
       Utils.difference(pKeys, this.ALLOWED_PLURALIZATION_KEYS).length === 0;
   },
 
-  inferArguments: function(args, normalizeDefault) {
+  inferArguments: function(args, normalizeDefault, meta) {
     if (typeof normalizeDefault === 'undefined' || normalizeDefault === null)
       normalizeDefault = true;
 
@@ -101,6 +101,8 @@ var CallHelpers = {
       return args;
 
     var hasKey = this.isKeyProvided.apply(this, args);
+    if (meta)
+      meta.inferredKey = !hasKey;
     if (!hasKey)
       args.unshift(this.inferKey(args[0]));
     var defaultOrOptions = args[1];

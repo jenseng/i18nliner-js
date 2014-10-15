@@ -27,7 +27,7 @@ I18nJsExtractor.prototype.run = function() {
   var ast = esprima.parse(this.source, {loc: true});
   estraverse.traverse(ast, {
     enter: this.enter.bind(this),
-    leave: function() {}
+    leave: this.leave.bind(this)
   });
 };
 
@@ -43,6 +43,9 @@ I18nJsExtractor.prototype.isExtractableCall = function(node, receiver, method) {
 I18nJsExtractor.prototype.enter = function(node) {
   if (node.type === "CallExpression")
     this.processCall(node);
+};
+
+I18nJsExtractor.prototype.leave = function() {
 };
 
 I18nJsExtractor.prototype.processCall = function(node) {
@@ -81,8 +84,12 @@ I18nJsExtractor.prototype.evaluateExpression = function(node, identifierToString
   return this.UNSUPPORTED_EXPRESSION;
 };
 
+I18nJsExtractor.prototype.buildTranslateCall = function(line, method, args) {
+  return new TranslateCall(line, method, args);
+};
+
 I18nJsExtractor.prototype.processTranslateCall = function(line, receiver, method, args) {
-  var call = new TranslateCall(line, method, args);
+  var call = this.buildTranslateCall(line, method, args);
   var translations = call.translations();
   for (var i = 0, len = translations.length; i < len; i++)
     this.handler(translations[i][0], translations[i][1]);
