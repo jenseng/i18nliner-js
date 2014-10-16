@@ -7,8 +7,7 @@ var I18nliner = {
     if (fs.existsSync(".i18nignore")) {
       ignores = fs.readFileSync(".i18nignore").toString().trim().split(/\r?\n|\r/);
     }
-    this.ignore = function() { return ignores; };
-    return this.ignore();
+    return ignores;
   },
   set: function(key, value, fn) {
     var prevValue = this[key];

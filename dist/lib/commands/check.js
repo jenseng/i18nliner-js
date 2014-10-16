@@ -1,12 +1,9 @@
 "use strict";
-/* global process */
-
 var clc = require("cli-color")["default"] || require("cli-color");
 
 var TranslationHash = require("../extractors/translation_hash")["default"] || require("../extractors/translation_hash");
 var GenericCommand = require("./generic_command")["default"] || require("./generic_command");
 var JsProcessor = require("../processors/js_processor")["default"] || require("../processors/js_processor");
-var I18nliner = require("../i18nliner")["default"] || require("../i18nliner");
 
 var red = clc.red;
 var green = clc.green;
@@ -17,17 +14,6 @@ function sum(array, prop) {
     total += array[i][prop];
   }
   return total;
-}
-
-function chdir(dir, cb) {
-  var origDir = process.cwd();
-  try {
-    process.chdir(dir);
-    cb();
-  }
-  finally {
-    process.chdir(origDir);
-  }
 }
 
 function Check(options) {
@@ -55,11 +41,9 @@ Check.prototype.setUpProcessors = function() {
 };
 
 Check.prototype.checkFiles = function() {
-  chdir(I18nliner.basePath, function() {
-    for (var i = 0; i < this.processors.length; i++) {
-      this.processors[i].checkFiles();
-    }
-  }.bind(this));
+  for (var i = 0; i < this.processors.length; i++) {
+    this.processors[i].checkFiles();
+  }
 };
 
 Check.prototype.checkWrapper = function(file, checker) {
