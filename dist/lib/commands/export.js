@@ -20,7 +20,7 @@ Export.prototype.run = function() {
   mkdirp.sync(this.outputFile.replace(/\/[^\/]+$/, ''));
   if (success) {
     fs.writeFileSync(this.outputFile, JSON.stringify(translations));
-    this.print("Wrote default translations to " + this.outputFile);
+    this.print("Wrote default translations to " + this.outputFile + "\n");
   }
   return success;
 };
