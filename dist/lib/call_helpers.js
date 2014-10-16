@@ -64,6 +64,8 @@ var CallHelpers = {
     }
   },
 
+  keyPattern: /^(\w+\.)+\w+$/,
+
   /**
    * Possible translate signatures:
    *
@@ -80,7 +82,7 @@ var CallHelpers = {
       return true;
     if (maybeOptions)
       return true;
-    if (typeof keyOrDefault === 'string' && keyOrDefault.match(/^(\w+\.)+\w+$/))
+    if (typeof keyOrDefault === 'string' && keyOrDefault.match(CallHelpers.keyPattern))
       return true;
     return false;
   },
