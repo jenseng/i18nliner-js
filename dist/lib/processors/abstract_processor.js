@@ -21,6 +21,10 @@ function AbstractProcessor(translations, options) {
   this.fileCount = 0;
   this.checkWrapper = options.checkWrapper || this.checkWrapper;
   this.pattern = options.pattern || this.defaultPattern;
+  this.file = options.file;
+  if (options.directory)
+    this.directories = [options.directory];
+  this.only = options.only;
 }
 
 AbstractProcessor.prototype.checkWrapper = function(file, checker) {
@@ -29,11 +33,15 @@ AbstractProcessor.prototype.checkWrapper = function(file, checker) {
 
 AbstractProcessor.prototype.files = function(directory) {
   return chdir(directory, function() {
-    return Globby.
+    var fileScope = Globby.
       select([this.pattern]).
       reject(["/node_modules", "/bower_components"]).
-      reject(I18nliner.ignore()).
-      files;
+      reject(I18nliner.ignore());
+    if (this.only) {
+      var only = this.only instanceof Array ? this.only : [this.only];
+      fileScope = fileScope.select(only);
+    }
+    return fileScope.files;
   }.bind(this));
 };
 

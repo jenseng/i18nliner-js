@@ -34,7 +34,9 @@ Check.prototype.setUpProcessors = function() {
     this.processors.push(
       new (Check.config.processors[i])(this.translations, {
         translations: this.translations,
-        checkWrapper: this.checkWrapper.bind(this)
+        checkWrapper: this.checkWrapper.bind(this),
+        only: this.options.only,
+        directory: this.options.directory
       })
     );
   }
