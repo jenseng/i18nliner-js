@@ -67,7 +67,7 @@ AbstractProcessor.prototype.checkFilesIn = function(directory) {
 
 AbstractProcessor.prototype.checkFile = function(file) {
   this.fileCount++;
-  return this.checkContents(this.sourceFor(file));
+  return this.checkContents(this.sourceFor(file), file);
 };
 
 AbstractProcessor.prototype.getDirectories = function() {
