@@ -5,30 +5,38 @@ var Utils = require("../utils")["default"] || require("../utils");
 var extend = function(I18n) {
   var htmlEscape = Utils.htmlEscape;
 
+  I18n.HtmlSafeString = Utils.HtmlSafeString;
+
   I18n.interpolateWithoutHtmlSafety = I18n.interpolate;
   I18n.interpolate = function(message, options) {
     var needsEscaping = false;
-    var matches = message.match(this.PLACEHOLDER);
-    var len = matches && matches.length;
+    var matches = message.match(this.PLACEHOLDER) || [];
+    var len = matches.length;
+    var match;
+    var keys = [];
+    var key;
     var i;
-    var placeholder;
-    var name;
-    if (options.wrappers) {
+
+    if (options.wrappers)
       needsEscaping = true;
+
+    for (i = 0; i < len; i++) {
+      match = matches[i];
+      key = match.replace(this.PLACEHOLDER, "$1");
+      keys.push(key);
+      if (!(key in options)) continue;
+      if (match[1] === 'h')
+        options[key] = new I18n.HtmlSafeString(options[key]);
+      if (options[key] instanceof I18n.HtmlSafeString)
+        needsEscaping = true;
     }
-    else if (matches) {
-      for (i = 0; i < len; i++)
-        needsEscaping = needsEscaping || (matches[i][1] === 'h');
-    }
+
     if (needsEscaping) {
       message = htmlEscape(message);
-      if (matches) {
-        for (i = 0; i < len; i++) {
-          placeholder = matches[i];
-          name = placeholder.replace(this.PLACEHOLDER, "$1");
-          if (placeholder[1] !== 'h' && options[name])
-            options[name] = htmlEscape(options[name]);
-        }
+      for (i = 0; i < len; i++) {
+        key = keys[i];
+        if (!(key in options)) continue;
+        options[key] = htmlEscape(options[key]);
       }
     }
     return this.interpolateWithoutHtmlSafety(message, options);

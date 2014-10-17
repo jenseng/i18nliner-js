@@ -7,7 +7,16 @@ var htmlEntities = {
   "<": "&lt;"
 };
 
+function HtmlSafeString(string) {
+  this.string = (string instanceof String ? string : "" + string);
+}
+HtmlSafeString.prototype.toString = function() {
+  return this.string;
+};
+
 var Utils = {
+  HtmlSafeString: HtmlSafeString,
+
   difference: function(a1, a2) {
     var result = [];
     for (var i = 0, len = a1.length; i < len; i++) {
@@ -28,6 +37,7 @@ var Utils = {
 
   htmlEscape: function(string) {
     if (typeof string === 'undefined' || string === null) return '';
+    if (string instanceof Utils.HtmlSafeString) return string.toString();
     return String(string).replace(/[&<>"']/g, function(m){ return htmlEntities[m]; });
   },
 
