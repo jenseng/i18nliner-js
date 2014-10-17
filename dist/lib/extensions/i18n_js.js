@@ -15,7 +15,7 @@ var extend = function(I18n) {
     var key;
     var i;
 
-    if (options.wrappers)
+    if (options.wrappers || options.wrapper)
       needsEscaping = true;
 
     for (i = 0; i < len; i++) {

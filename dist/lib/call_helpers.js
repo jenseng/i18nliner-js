@@ -141,7 +141,7 @@ var CallHelpers = {
 
   applyWrapper: function(string, delimiter, wrapper) {
     var escapedDelimiter = Utils.regexpEscape(delimiter);
-    var pattern = new RegExp(escapedDelimiter + "(.*?)" + escapedDelimiter);
+    var pattern = new RegExp(escapedDelimiter + "(.*?)" + escapedDelimiter, "g");
     return string.replace(pattern, wrapper);
   }
 };
