@@ -8,7 +8,7 @@ var htmlEntities = {
 };
 
 function HtmlSafeString(string) {
-  this.string = (string instanceof String ? string : "" + string);
+  this.string = (typeof string === 'string' ? string : "" + string);
 }
 HtmlSafeString.prototype.toString = function() {
   return this.string;
