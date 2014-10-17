@@ -58,6 +58,11 @@ describe("I18nJs extension", function() {
         var result = I18n.translate("*bacon* > narwhals", {wrappers: ['<b>$1</b>']});
         assert.equal(result, "<b>bacon</b> &gt; narwhals");
       });
+
+      it("should interpolate placeholders in the wrapper", function() {
+        var result = I18n.translate("ohai *click here*", {wrapper: '<a href="%{url}">$1</a>', url: "about:blank"});
+        assert.equal(result, 'ohai <a href="about:blank">click here</a>');
+      });
     });
   });
 
