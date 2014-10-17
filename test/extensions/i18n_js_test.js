@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, context, it */
 import {assert} from "chai";
 import sinon from "sinon";
 import extend from "../../lib/extensions/i18n_js";
@@ -38,14 +38,26 @@ describe("I18nJs extension", function() {
       spy.restore();
     });
 
-    it("should apply wrappers", function() {
-      var result = I18n.translate("Hello *bob*. Click **here**", {wrappers: ['<b>$1</b>', '<a href="/">$1</a>']});
-      assert.equal(result, "Hello <b>bob</b>. Click <a href=\"/\">here</a>");
-    });
+    context("with wrappers", function() {
+      it("should apply a single wrapper", function() {
+        var result = I18n.translate("Hello *bob*.", {wrapper: '<b>$1</b>'});
+        assert.equal(result, "Hello <b>bob</b>.");
+      });
 
-    it("should html-escape the default when applying wrappers", function() {
-      var result = I18n.translate("*bacon* > narwhals", {wrappers: ['<b>$1</b>']});
-      assert.equal(result, "<b>bacon</b> &gt; narwhals");
+      it("should apply multiple wrappers", function() {
+        var result = I18n.translate("Hello *bob*. Click **here**", {wrappers: ['<b>$1</b>', '<a href="/">$1</a>']});
+        assert.equal(result, "Hello <b>bob</b>. Click <a href=\"/\">here</a>");
+      });
+
+      it("should apply multiple wrappers with arbitrary delimiters", function() {
+        var result = I18n.translate("Hello !!!bob!!!. Click ???here???", {wrappers: {'!!!': '<b>$1</b>', '???': '<a href="/">$1</a>'}});
+        assert.equal(result, "Hello <b>bob</b>. Click <a href=\"/\">here</a>");
+      });
+
+      it("should html-escape the default when applying wrappers", function() {
+        var result = I18n.translate("*bacon* > narwhals", {wrappers: ['<b>$1</b>']});
+        assert.equal(result, "<b>bacon</b> &gt; narwhals");
+      });
     });
   });
 

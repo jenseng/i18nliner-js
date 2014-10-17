@@ -124,7 +124,9 @@ var CallHelpers = {
     var i;
     var len;
     var keys;
-    if (wrappers.length) {
+    if (typeof wrappers === 'string')
+      wrappers = [wrappers];
+    if (wrappers instanceof Array) {
       for (i = wrappers.length; i; i--)
         string = this.applyWrapper(string, new Array(i + 1).join("*"), wrappers[i - 1]);
     }

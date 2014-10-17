@@ -55,7 +55,7 @@ var extend = function(I18n) {
     var defaultValue = options.defaultValue;
     if (defaultValue)
       options.defaultValue = CallHelpers.normalizeDefault(defaultValue, options);
-    var wrappers = options.wrappers;
+    var wrappers = options.wrappers || options.wrapper;
     var result;
 
     result = this.translateWithoutI18nliner(key, options);
