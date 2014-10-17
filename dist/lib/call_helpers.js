@@ -10,8 +10,12 @@ var CallHelpers = {
   REQUIRED_PLURALIZATION_KEYS: ["one", "other"],
   UNSUPPORTED_EXPRESSION: [],
 
+  normalizeKey: function(key) {
+    return key;
+  },
+
   normalizeDefault: function(defaultValue, translateOptions) {
-    defaultValue = this.inferPluralizationHash(defaultValue, translateOptions);
+    defaultValue = CallHelpers.inferPluralizationHash(defaultValue, translateOptions);
     return defaultValue;
   },
 
@@ -95,10 +99,7 @@ var CallHelpers = {
       Utils.difference(pKeys, this.ALLOWED_PLURALIZATION_KEYS).length === 0;
   },
 
-  inferArguments: function(args, normalizeDefault, meta) {
-    if (typeof normalizeDefault === 'undefined' || normalizeDefault === null)
-      normalizeDefault = true;
-
+  inferArguments: function(args, meta) {
     if (args.length === 2 && typeof args[1] === 'object' && args[1].defaultValue)
       return args;
 
@@ -112,8 +113,6 @@ var CallHelpers = {
       var options = args[2] = (args[2] || {});
       if (this.isObject(options)) {
         options.defaultValue = args.splice(1, 1)[0];
-        if (normalizeDefault)
-          options.defaultValue = this.normalizeDefault(options.defaultValue, options);
       }
     }
     if (args.length === 1)
