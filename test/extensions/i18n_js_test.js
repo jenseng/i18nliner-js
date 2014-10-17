@@ -69,7 +69,7 @@ describe("I18nJs extension", function() {
 
     it("should html-escape the string and other values if any value is an HtmlSafeString", function() {
       var markup = "<input>";
-      var result = I18n.interpolate("type %{input} & you get this: %{output}", {input: markup, output: new I18n.HtmlSafeString(markup)});
+      var result = I18n.interpolate("type %{input} & you get this: %{output}", {input: markup, output: new I18n.Utils.HtmlSafeString(markup)});
       assert.equal(
         result,
         "type &lt;input&gt; &amp; you get this: <input>"

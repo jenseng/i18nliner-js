@@ -5,8 +5,6 @@ var Utils = require("../utils")["default"] || require("../utils");
 var extend = function(I18n) {
   var htmlEscape = Utils.htmlEscape;
 
-  I18n.HtmlSafeString = Utils.HtmlSafeString;
-
   I18n.interpolateWithoutHtmlSafety = I18n.interpolate;
   I18n.interpolate = function(message, options) {
     var needsEscaping = false;
@@ -26,8 +24,8 @@ var extend = function(I18n) {
       keys.push(key);
       if (!(key in options)) continue;
       if (match[1] === 'h')
-        options[key] = new I18n.HtmlSafeString(options[key]);
-      if (options[key] instanceof I18n.HtmlSafeString)
+        options[key] = new Utils.HtmlSafeString(options[key]);
+      if (options[key] instanceof Utils.HtmlSafeString)
         needsEscaping = true;
     }
 
@@ -46,6 +44,7 @@ var extend = function(I18n) {
   I18n.PLACEHOLDER = /(?:\{\{|%h?\{)(.*?)(?:\}\}?)/gm;
 
   I18n.CallHelpers = CallHelpers;
+  I18n.Utils = Utils;
 
   I18n.translateWithoutI18nliner = I18n.translate;
   I18n.translate = function() {
