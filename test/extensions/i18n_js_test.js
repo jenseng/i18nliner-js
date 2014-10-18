@@ -2,6 +2,7 @@
 import {assert} from "chai";
 import sinon from "sinon";
 import extend from "../../lib/extensions/i18n_js";
+import Utils from "../../lib/utils";
 
 describe("I18nJs extension", function() {
   var I18n = {
@@ -44,6 +45,11 @@ describe("I18nJs extension", function() {
         assert.equal(result, "Hello <b>bob</b>.");
       });
 
+      it("should be html-safe", function() {
+        var result = I18n.translate("Hello *bob*.", {wrapper: '<b>$1</b>'});
+        assert(result instanceof Utils.HtmlSafeString);
+      });
+
       it("should apply multiple wrappers", function() {
         var result = I18n.translate("Hello *bob*. Click **here**", {wrappers: ['<b>$1</b>', '<a href="/">$1</a>']});
         assert.equal(result, "Hello <b>bob</b>. Click <a href=\"/\">here</a>");
@@ -73,6 +79,7 @@ describe("I18nJs extension", function() {
         result,
         "hello & good day, <script>"
       );
+      assert.equal(typeof result, "string");
     });
 
     it("should html-escape the string and other values if any placeholder is flagged as html-safe", function() {
@@ -82,6 +89,7 @@ describe("I18nJs extension", function() {
         result,
         "type &lt;input&gt; &amp; you get this: <input>"
       );
+      assert(result instanceof Utils.HtmlSafeString);
     });
 
     it("should html-escape the string and other values if any value is an HtmlSafeString", function() {
@@ -91,6 +99,7 @@ describe("I18nJs extension", function() {
         result,
         "type &lt;input&gt; &amp; you get this: <input>"
       );
+      assert(result instanceof Utils.HtmlSafeString);
     });
   });
 });

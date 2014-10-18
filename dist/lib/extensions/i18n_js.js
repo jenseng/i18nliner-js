@@ -42,7 +42,8 @@ var extend = function(I18n) {
         options[key] = htmlEscape(options[key]);
       }
     }
-    return this.interpolateWithoutHtmlSafety(message, options);
+    message = this.interpolateWithoutHtmlSafety(message, options);
+    return needsEscaping ? new Utils.HtmlSafeString(message) : message;
   };
 
   // add html-safety hint, i.e. "%h{...}"
