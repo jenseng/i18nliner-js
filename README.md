@@ -16,7 +16,7 @@ I18nliner is I18n made simple.
 No .js/yml translation files. Easy inline defaults. Optional keys. Easy
 pluralization. Wrappers for HTML-free translations.
 
-I18nliner extends [i18n.js](https://github.com/fnando/i18n-js), so you can
+I18nliner extends [i18n-js](https://github.com/fnando/i18n-js), so you can
 add it to an already-internationalized app that uses it.
 
 ## TL;DR
@@ -90,9 +90,8 @@ Sure, but *you* don't need to write them. Just run:
 i18nliner dump
 ```
 
-This extracts all default translations from your codebase, merges them with any
-other ones (from pre-existing translation files), and outputs them to
-`locales/generated/translations.json` (or `.js` if using i18n.js)
+This extracts all default translations from your codebase and outputs them
+to `config/locales/generated/en.json`
 
 ### It's okay to lose your keys
 
@@ -184,7 +183,7 @@ automatically escaped. If you are using i18n.js, you can hint that an
 interpolation value is already HTML-safe via `%h{...}`, e.g.
 
 ```javascript
-I18n.t("If you type %{input} you get %h{input}", {input: "<input>"});
+I18n.t("If you type %{input} you get %h{raw_input}", {input: "<input>", raw_input: "<input>"});
 => "If you type &lt;input&gt; you get <input>"
 ```
 
