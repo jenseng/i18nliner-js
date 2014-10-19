@@ -20,7 +20,7 @@ var CallHelpers = {
   },
 
   inferPluralizationHash: function(defaultValue, translateOptions) {
-    if (typeof defaultValue === 'string' && defaultValue.match(/^[\w-]+$/) && translateOptions && translateOptions.count) {
+    if (typeof defaultValue === 'string' && defaultValue.match(/^[\w-]+$/) && translateOptions && ("count" in translateOptions)) {
       return {one: "1 " + defaultValue, other: "%{count} " + pluralize(defaultValue)};
     }
     else {
