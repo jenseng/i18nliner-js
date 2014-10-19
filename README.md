@@ -3,14 +3,6 @@
 [<img src="https://secure.travis-ci.org/jenseng/i18nliner-js.png"
 />](http://travis-ci.org/jenseng/i18nliner-js)
 
-## TODO
-
-* i18nliner_js gem (will register itself w/ i18nliner(.rb), etc)
-* bowerify
-* extractor/checker/etc cli (right now there's just grunt)
-
-====
-
 I18nliner is I18n made simple.
 
 No .js/yml translation files. Easy inline defaults. Optional keys. Easy
@@ -46,22 +38,43 @@ translations), use npm (see below).
 Depending on how you manage JavaScript dependencies in your app, you have
 several options for installing/including the runtime extensions:
 
+### regular old script
+
+Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18n_js_extension.js)
+and include them on the page after i18n.js (via `<script>`, asset pipeline, etc).
+
 ### npm
 
 ```bash
 npm install i18nliner --save
 ```
 
-### bower
+You'll need to shoehorn i18n.js into your app, which (as of this writing)
+is not CJS-compatible :-/, e.g.
 
-```bash
-bower install --save i18nliner
+```javascript
+// assuming you shoehorn this in
+var I18n = require("./path/to/cjs'd/i18n");
+// add the runtime extensions
+require("i18nliner/dist/lib/extensions/i18n_js")["default"](I18n);
 ```
 
-### Download
+### amd
 
-Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18n_js_extensions.js)
-and include them on the page after i18n.js.
+Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18n_js_extension.js)
+and use the requirejs shim config to add them (and i18n.js) to your app, e.g.
+
+```javascript
+requirejs.config({
+  shims: {
+    'i18n': 'I18n',
+    'i18n_js_extension': {
+      deps: 'i18n',
+      exports: 'I18n'
+    }
+  }
+})
+```
 
 ## Features
 
