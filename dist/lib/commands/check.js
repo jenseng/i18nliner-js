@@ -71,14 +71,14 @@ Check.prototype.printSummary = function() {
 
   var translationCount = sum(processors, 'translationCount');
   var fileCount = sum(processors, 'fileCount');
-  var elapsed = parseInt(((new Date()).getTime() - this.startTime) / 1000, 10);
+  var elapsed = ((new Date()).getTime() - this.startTime);
 
   this.print("\n\n");
 
   for (i = 0; i < errorsLen; i++) {
     this.print((i + 1) + ")\n" + red(errors[i]) + "\n\n");
   }
-  this.print("Finished in " + elapsed + " seconds\n\n");
+  this.print("Finished in " + (elapsed / 1000) + " seconds!\n\n");
   summary = fileCount + " files, " + translationCount + " strings, " + errorsLen + " failures";
   this.print((this.isSuccess() ? green : red)(summary) + "\n");
 };

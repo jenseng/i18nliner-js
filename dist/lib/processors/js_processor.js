@@ -13,6 +13,7 @@ JsProcessor.prototype.defaultPattern = "**/*.js";
 JsProcessor.prototype.I18nJsExtractor = I18nJsExtractor;
 
 JsProcessor.prototype.checkContents = function(source) {
+  if (!source.match(/I18n\.t/)) return;
   var extractor = new this.I18nJsExtractor({source: this.preProcess(source)});
   extractor.forEach(function(key, value, meta) {
     this.translations.set(key, value, meta);
@@ -21,7 +22,7 @@ JsProcessor.prototype.checkContents = function(source) {
 };
 
 JsProcessor.prototype.sourceFor = function(file) {
-  return fs.readFileSync(file);
+  return fs.readFileSync(file).toString();
 };
 
 JsProcessor.prototype.preProcess = function(source) {
