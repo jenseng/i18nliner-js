@@ -32,9 +32,10 @@ AbstractProcessor.prototype.checkWrapper = function(file, checker) {
 };
 
 AbstractProcessor.prototype.files = function(directory) {
+  var pattern = this.pattern instanceof Array ? this.pattern : [this.pattern];
   return chdir(directory, function() {
     var fileScope = Globby.
-      select([this.pattern]).
+      select(pattern).
       reject(["/node_modules", "/bower_components"]).
       reject(I18nliner.ignore());
     if (this.only) {
