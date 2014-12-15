@@ -7,7 +7,11 @@ import Utils from "../../lib/utils";
 describe("I18nJs extension", function() {
   var I18n = {
     translate: function(key, options) {
-      return this.interpolate(options.defaultValue, options);
+      var defaultValue = options.defaultValue;
+      if (typeof options.count === "number") {
+        defaultValue = options.count === 1 ? defaultValue.one : defaultValue.other;
+      }
+      return this.interpolate(defaultValue, options);
     },
 
     interpolate: function(string, options) {
@@ -34,6 +38,16 @@ describe("I18nJs extension", function() {
       );
       assert.deepEqual(
         ["hello_name_84ff273f", {defaultValue: "Hello %{name}", name: "bob"}],
+        spy.args[0]
+      );
+      spy.restore();
+    });
+
+    it("should infer pluralization objects", function() {
+      var spy = sinon.spy(I18n, "translateWithoutI18nliner");
+      I18n.translate("light", {count: 1});
+      assert.deepEqual(
+        ["count_lights_58339e29", {defaultValue: {one: "1 light", other: "%{count} lights"}, count: 1}],
         spy.args[0]
       );
       spy.restore();

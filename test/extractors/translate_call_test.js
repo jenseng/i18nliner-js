@@ -81,6 +81,20 @@ describe("TranslateCall", function() {
   });
 
   describe("pluralization", function() {
+    describe("keys", function() {
+      it("should be inferred from a word", function() {
+        var result = call("person", {count: 1}).translations();
+        assert.equal(result[0][0], "count_people_489946e7.one");
+        assert.equal(result[1][0], "count_people_489946e7.other");
+      });
+
+      it("should be inferred from an object", function() {
+        var result = call({one: "just you", other: "lotsa peeps"}, {count: 1}).translations();
+        assert.equal(result[0][0], "lotsa_peeps_41499c40.one");
+        assert.equal(result[1][0], "lotsa_peeps_41499c40.other");
+      });
+    });
+
     describe("defaults", function() {
       it("should be inferred", function() {
         var result = call("person", {count: 1}).translations();
