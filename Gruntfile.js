@@ -3,6 +3,7 @@ var matchdep = require('matchdep');
 
 module.exports = function(grunt){
   matchdep.filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+  matchdep.filterDev('gruntify-*').forEach(grunt.loadNpmTasks);
 
   grunt.initConfig({
 
@@ -10,41 +11,23 @@ module.exports = function(grunt){
       tmp: [ 'tmp/**/*' ]
     },
 
-    transpile: {
+    babel: {
       testLib: {
         expand: true,
-        type: 'cjs',
         cwd: 'lib',
         src: [ '**/*.js' ],
-        dest: 'tmp/lib',
-        compatFix: true
+        dest: 'tmp/lib'
       },
       tests: {
         expand: true,
-        type: 'cjs',
         cwd: 'test',
         src: [ '**/*.js', '!fixtures/**/*.js' ],
-        dest: 'tmp/test',
-        compatFix: true
+        dest: 'tmp/test'
       }
     },
 
-    jshint: {
-      all: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*_test.js'],
-      options: {
-        esnext: true,
-        camelcase: true,
-        eqeqeq: true,
-        forin: true,
-        immed: true,
-        indent: 2,
-        undef: true,
-        latedef: true,
-        newcap: true,
-        nonew: true,
-        unused: true,
-        trailing: true
-      }
+    eslint: {
+      all: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*_test.js']
     },
 
     browserify: {
@@ -65,7 +48,7 @@ module.exports = function(grunt){
     }
   });
 
-  grunt.registerTask('test', [ 'clean', 'transpile:testLib', 'transpile:tests' ]);
-  grunt.registerTask('default', [ 'transpile:testLib', 'transpile:tests' ]);
+  grunt.registerTask('test', [ 'clean', 'babel:testLib', 'babel:tests' ]);
+  grunt.registerTask('default', [ 'babel:testLib', 'babel:tests' ]);
   grunt.registerTask('dist', ['test', 'copy']);
 };
