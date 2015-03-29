@@ -280,7 +280,8 @@ translation calls, keys and translation files will still just work without modif
 
 * [i18nliner (ruby)](https://github.com/jenseng/i18nliner)
 * [i18nliner-handlebars](https://github.com/fivetanley/i18nliner-handlebars)
+* [react-i18nliner](https://github.com/jenseng/react-i18nliner)
 
 ## License
 
-Copyright (c) 2014 Jon Jensen, released under the MIT license
+Copyright (c) 2015 Jon Jensen, released under the MIT license
