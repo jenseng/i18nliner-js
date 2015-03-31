@@ -48,6 +48,13 @@ describe("I18nJsExtractor", function() {
       );
     });
 
+    it("should support jsx and es6", function() {
+      assert.deepEqual(
+        extract("let foo = () => <b>{I18n.t('Foo', {bar})}</b>"),
+        {"foo_f44ad75d": "Foo"}
+      );
+    });
+
     it("should bail on invalid t calls", function() {
       assert.throws(function(){
         extract("I18n.t(foo)");
