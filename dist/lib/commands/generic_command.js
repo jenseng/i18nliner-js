@@ -1,15 +1,16 @@
-"use strict";
 /* global process */
+
+"use strict";
 
 function GenericCommand(options) {
   this.options = options;
   if (this.options.silent) {
-    this.print = function(){};
+    this.print = function () {};
   }
 }
 
-GenericCommand.prototype.print = function(string) {
+GenericCommand.prototype.print = function (string) {
   process.stdout.write(string);
 };
 
-exports["default"] = GenericCommand;
+module.exports = GenericCommand;

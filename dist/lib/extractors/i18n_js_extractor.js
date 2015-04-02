@@ -1,10 +1,18 @@
 "use strict";
-var esprima = require("esprima")["default"] || require("esprima");
-var estraverse = require("estraverse")["default"] || require("estraverse");
-var TranslateCall = require("./translate_call")["default"] || require("./translate_call");
-var Utils = require("../utils")["default"] || require("../utils");
-var CallHelpers = require("../call_helpers")["default"] || require("../call_helpers");
-var TranslationHash = require("./translation_hash")["default"] || require("./translation_hash");
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+var esprima = _interopRequire(require("esprima-fb"));
+
+var estraverse = _interopRequire(require("estraverse-fb"));
+
+var TranslateCall = _interopRequire(require("./translate_call"));
+
+var Utils = _interopRequire(require("../utils"));
+
+var CallHelpers = _interopRequire(require("../call_helpers"));
+
+var TranslationHash = _interopRequire(require("./translation_hash"));
 
 function I18nJsExtractor(options) {
   this.source = options.source;
@@ -12,43 +20,36 @@ function I18nJsExtractor(options) {
 
 Utils.extend(I18nJsExtractor.prototype, CallHelpers);
 
-I18nJsExtractor.prototype.forEach = function(handler) {
+I18nJsExtractor.prototype.forEach = function (handler) {
   this.handler = handler;
   this.run();
   delete this.handler;
 };
 
-I18nJsExtractor.prototype.run = function() {
+I18nJsExtractor.prototype.run = function () {
   if (!this.handler) {
     this.translations = new TranslationHash();
     this.handler = this.translations.set.bind(this.translations);
   }
 
-  var ast = esprima.parse(this.source, {loc: true});
+  var ast = esprima.parse(this.source, { loc: true });
   estraverse.traverse(ast, {
     enter: this.enter.bind(this),
     leave: this.leave.bind(this)
   });
 };
 
-I18nJsExtractor.prototype.isExtractableCall = function(node, receiver, method) {
-  return node.type === "MemberExpression" &&
-    !node.computed &&
-    receiver.type === "Identifier" &&
-    receiver.name === "I18n" &&
-    method.type === "Identifier" &&
-    (method.name === "t" || method.name === "translate");
+I18nJsExtractor.prototype.isExtractableCall = function (node, receiver, method) {
+  return node.type === "MemberExpression" && !node.computed && receiver.type === "Identifier" && receiver.name === "I18n" && method.type === "Identifier" && (method.name === "t" || method.name === "translate");
 };
 
-I18nJsExtractor.prototype.enter = function(node) {
-  if (node.type === "CallExpression")
-    this.processCall(node);
+I18nJsExtractor.prototype.enter = function (node) {
+  if (node.type === "CallExpression") this.processCall(node);
 };
 
-I18nJsExtractor.prototype.leave = function() {
-};
+I18nJsExtractor.prototype.leave = function () {};
 
-I18nJsExtractor.prototype.processCall = function(node) {
+I18nJsExtractor.prototype.processCall = function (node) {
   var callee = node.callee;
   var receiver = callee.object;
   var method = callee.property;
@@ -64,7 +65,7 @@ I18nJsExtractor.prototype.processCall = function(node) {
   }
 };
 
-I18nJsExtractor.prototype.processArguments = function(args) {
+I18nJsExtractor.prototype.processArguments = function (args) {
   var result = [];
   for (var i = 0, len = args.length; i < len; i++) {
     result.push(this.evaluateExpression(args[i]));
@@ -72,30 +73,25 @@ I18nJsExtractor.prototype.processArguments = function(args) {
   return result;
 };
 
-I18nJsExtractor.prototype.evaluateExpression = function(node, identifierToString) {
-  if (node.type === "Literal")
-    return node.value;
-  if (node.type === "Identifier" && identifierToString)
-    return node.name;
-  if (node.type === "ObjectExpression")
-    return this.objectFrom(node);
-  if (node.type === "BinaryExpression" && node.operator === "+")
-    return this.stringFromConcatenation(node);
+I18nJsExtractor.prototype.evaluateExpression = function (node, identifierToString) {
+  if (node.type === "Literal") return node.value;
+  if (node.type === "Identifier" && identifierToString) return node.name;
+  if (node.type === "ObjectExpression") return this.objectFrom(node);
+  if (node.type === "BinaryExpression" && node.operator === "+") return this.stringFromConcatenation(node);
   return this.UNSUPPORTED_EXPRESSION;
 };
 
-I18nJsExtractor.prototype.buildTranslateCall = function(line, method, args) {
+I18nJsExtractor.prototype.buildTranslateCall = function (line, method, args) {
   return new TranslateCall(line, method, args);
 };
 
-I18nJsExtractor.prototype.processTranslateCall = function(line, receiver, method, args) {
+I18nJsExtractor.prototype.processTranslateCall = function (line, receiver, method, args) {
   var call = this.buildTranslateCall(line, method, args);
   var translations = call.translations();
-  for (var i = 0, len = translations.length; i < len; i++)
-    this.handler(translations[i][0], translations[i][1], call);
+  for (var i = 0, len = translations.length; i < len; i++) this.handler(translations[i][0], translations[i][1], call);
 };
 
-I18nJsExtractor.prototype.objectFrom = function(node) {
+I18nJsExtractor.prototype.objectFrom = function (node) {
   var object = {};
   var props = node.properties;
   var prop;
@@ -103,19 +99,17 @@ I18nJsExtractor.prototype.objectFrom = function(node) {
   for (var i = 0, len = props.length; i < len; i++) {
     prop = props[i];
     key = this.evaluateExpression(prop.key, true);
-    if (typeof key !== 'string')
-      return this.UNSUPPORTED_EXPRESSION;
+    if (typeof key !== "string") return this.UNSUPPORTED_EXPRESSION;
     object[key] = this.evaluateExpression(prop.value);
   }
   return object;
 };
 
-I18nJsExtractor.prototype.stringFromConcatenation = function(node) {
+I18nJsExtractor.prototype.stringFromConcatenation = function (node) {
   var left = this.evaluateExpression(node.left);
   var right = this.evaluateExpression(node.right);
-  if (typeof left !== "string" || typeof right !== "string")
-    return this.UNSUPPORTED_EXPRESSION;
+  if (typeof left !== "string" || typeof right !== "string") return this.UNSUPPORTED_EXPRESSION;
   return left + right;
 };
 
-exports["default"] = I18nJsExtractor;
+module.exports = I18nJsExtractor;

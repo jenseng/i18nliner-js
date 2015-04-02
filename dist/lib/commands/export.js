@@ -1,8 +1,14 @@
 "use strict";
-var fs = require("fs")["default"] || require("fs");
-var mkdirp = require("mkdirp")["default"] || require("mkdirp");
-var Check = require("./check")["default"] || require("./check");
-var I18nliner = require("../../lib/i18nliner")["default"] || require("../../lib/i18nliner");
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+var fs = _interopRequire(require("fs"));
+
+var mkdirp = _interopRequire(require("mkdirp"));
+
+var Check = _interopRequire(require("./check"));
+
+var I18nliner = _interopRequire(require("../../lib/i18nliner"));
 
 function Export(options) {
   Check.call(this, options);
@@ -11,13 +17,13 @@ function Export(options) {
 Export.prototype = Object.create(Check.prototype);
 Export.prototype.constructor = Export;
 
-Export.prototype.run = function() {
+Export.prototype.run = function () {
   var success = Check.prototype.run.call(this);
-  var locale = 'en';
+  var locale = "en";
   var translations = {};
   translations[locale] = this.translations.translations;
-  this.outputFile = I18nliner.basePath + '/' + (this.options.outputFile || "config/locales/generated/" + locale + ".json");
-  mkdirp.sync(this.outputFile.replace(/\/[^\/]+$/, ''));
+  this.outputFile = I18nliner.basePath + "/" + (this.options.outputFile || "config/locales/generated/" + locale + ".json");
+  mkdirp.sync(this.outputFile.replace(/\/[^\/]+$/, ""));
   if (success) {
     fs.writeFileSync(this.outputFile, JSON.stringify(translations));
     this.print("Wrote default translations to " + this.outputFile + "\n");
@@ -25,4 +31,4 @@ Export.prototype.run = function() {
   return success;
 };
 
-exports["default"] = Export;
+module.exports = Export;

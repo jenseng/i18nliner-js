@@ -1,9 +1,14 @@
 "use strict";
-var clc = require("cli-color")["default"] || require("cli-color");
 
-var TranslationHash = require("../extractors/translation_hash")["default"] || require("../extractors/translation_hash");
-var GenericCommand = require("./generic_command")["default"] || require("./generic_command");
-var JsProcessor = require("../processors/js_processor")["default"] || require("../processors/js_processor");
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+var clc = _interopRequire(require("cli-color"));
+
+var TranslationHash = _interopRequire(require("../extractors/translation_hash"));
+
+var GenericCommand = _interopRequire(require("./generic_command"));
+
+var JsProcessor = _interopRequire(require("../processors/js_processor"));
 
 var red = clc.red;
 var green = clc.green;
@@ -28,27 +33,26 @@ Check.prototype.constructor = Check;
 
 Check.prototype.TranslationHash = TranslationHash;
 
-Check.prototype.setUpProcessors = function() {
+Check.prototype.setUpProcessors = function () {
   this.processors = [];
-  for (var i = 0; i < Check.config.processors.length; i++) {
-    this.processors.push(
-      new (Check.config.processors[i])(this.translations, {
-        translations: this.translations,
-        checkWrapper: this.checkWrapper.bind(this),
-        only: this.options.only,
-        directory: this.options.directory
-      })
-    );
+  for (var key in Check.processors) {
+    var Processor = Check.processors[key];
+    this.processors.push(new Processor(this.translations, {
+      translations: this.translations,
+      checkWrapper: this.checkWrapper.bind(this),
+      only: this.options.only,
+      directory: this.options.directory
+    }));
   }
 };
 
-Check.prototype.checkFiles = function() {
+Check.prototype.checkFiles = function () {
   for (var i = 0; i < this.processors.length; i++) {
     this.processors[i].checkFiles();
   }
 };
 
-Check.prototype.checkWrapper = function(file, checker) {
+Check.prototype.checkWrapper = function (file, checker) {
   try {
     checker(file);
     this.print(green("."));
@@ -58,40 +62,38 @@ Check.prototype.checkWrapper = function(file, checker) {
   }
 };
 
-Check.prototype.isSuccess = function() {
+Check.prototype.isSuccess = function () {
   return !this.errors.length;
 };
 
-Check.prototype.printSummary = function() {
+Check.prototype.printSummary = function () {
   var processors = this.processors;
   var summary;
   var errors = this.errors;
   var errorsLen = errors.length;
   var i;
 
-  var translationCount = sum(processors, 'translationCount');
-  var fileCount = sum(processors, 'fileCount');
-  var elapsed = (new Date()).getTime() - this.startTime;
+  var translationCount = sum(processors, "translationCount");
+  var fileCount = sum(processors, "fileCount");
+  var elapsed = new Date().getTime() - this.startTime;
 
   this.print("\n\n");
 
   for (i = 0; i < errorsLen; i++) {
-    this.print((i + 1) + ")\n" + red(errors[i]) + "\n\n");
+    this.print(i + 1 + ")\n" + red(errors[i]) + "\n\n");
   }
-  this.print("Finished in " + (elapsed / 1000) + " seconds\n\n");
+  this.print("Finished in " + elapsed / 1000 + " seconds\n\n");
   summary = fileCount + " files, " + translationCount + " strings, " + errorsLen + " failures";
   this.print((this.isSuccess() ? green : red)(summary) + "\n");
 };
 
-Check.prototype.run = function() {
-  this.startTime = (new Date()).getTime();
+Check.prototype.run = function () {
+  this.startTime = new Date().getTime();
   this.checkFiles();
   this.printSummary();
   return this.isSuccess();
 };
 
-Check.config = {
-  processors: [JsProcessor]
-};
+Check.processors = { JsProcessor: JsProcessor };
 
-exports["default"] = Check;
+module.exports = Check;

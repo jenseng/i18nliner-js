@@ -1,16 +1,19 @@
 "use strict";
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
 /* global process */
 
-var Globby = require("gglobby")["default"] || require("gglobby");
-var I18nliner = require("../i18nliner")["default"] || require("../i18nliner");
+var Globby = _interopRequire(require("gglobby"));
+
+var I18nliner = _interopRequire(require("../i18nliner"));
 
 function chdir(dir, cb) {
   var origDir = process.cwd();
   try {
     process.chdir(dir);
     return cb();
-  }
-  finally {
+  } finally {
     process.chdir(origDir);
   }
 }
@@ -22,31 +25,27 @@ function AbstractProcessor(translations, options) {
   this.checkWrapper = options.checkWrapper || this.checkWrapper;
   this.pattern = options.pattern || this.defaultPattern;
   this.file = options.file;
-  if (options.directory)
-    this.directories = [options.directory];
+  if (options.directory) this.directories = [options.directory];
   this.only = options.only;
 }
 
-AbstractProcessor.prototype.checkWrapper = function(file, checker) {
+AbstractProcessor.prototype.checkWrapper = function (file, checker) {
   checker(file);
 };
 
-AbstractProcessor.prototype.files = function(directory) {
+AbstractProcessor.prototype.files = function (directory) {
   var pattern = this.pattern instanceof Array ? this.pattern : [this.pattern];
-  return chdir(directory, function() {
-    var fileScope = Globby.
-      select(pattern).
-      reject(["/node_modules", "/bower_components"]).
-      reject(I18nliner.ignore());
+  return chdir(directory, (function () {
+    var fileScope = Globby.select(pattern).reject(["/node_modules", "/bower_components"]).reject(I18nliner.ignore());
     if (this.only) {
       var only = this.only instanceof Array ? this.only : [this.only];
       fileScope = fileScope.select(only);
     }
     return fileScope.files;
-  }.bind(this));
+  }).bind(this));
 };
 
-AbstractProcessor.prototype.checkFiles = function() {
+AbstractProcessor.prototype.checkFiles = function () {
   var directories = this.getDirectories();
   var directoriesLen = directories.length;
   var i;
@@ -55,7 +54,7 @@ AbstractProcessor.prototype.checkFiles = function() {
   }
 };
 
-AbstractProcessor.prototype.checkFilesIn = function(directory) {
+AbstractProcessor.prototype.checkFilesIn = function (directory) {
   var files = this.files(directory);
   var filesLen = files.length;
   var checkWrapper = this.checkWrapper;
@@ -66,14 +65,14 @@ AbstractProcessor.prototype.checkFilesIn = function(directory) {
   }
 };
 
-AbstractProcessor.prototype.checkFile = function(file) {
+AbstractProcessor.prototype.checkFile = function (file) {
   this.fileCount++;
   return this.checkContents(this.sourceFor(file), file);
 };
 
-AbstractProcessor.prototype.getDirectories = function() {
+AbstractProcessor.prototype.getDirectories = function () {
   if (this.directories) return this.directories;
   return [I18nliner.basePath];
 };
 
-exports["default"] = AbstractProcessor;
+module.exports = AbstractProcessor;
