@@ -14,13 +14,13 @@ var I18nliner = {
   },
 
   set: function set(key, value, fn) {
-    var prevValue = this[key];
-    this[key] = value;
+    var prevValue = this.config[key];
+    this.config[key] = value;
     if (fn) {
       try {
         fn();
       } finally {
-        this[key] = prevValue;
+        this.config[key] = prevValue;
       }
     }
   },
@@ -43,14 +43,18 @@ var I18nliner = {
   loadPlugins: function loadPlugins(plugins) {
     plugins.forEach((function (pluginName) {
       require(pluginName)({
-        processors: this.Commands.Check.processors
+        processors: this.Commands.Check.processors,
+        config: this.config
       });
     }).bind(this));
   },
 
-  inferredKeyFormat: "underscored_crc32",
-  underscoredKeyLength: 50,
-  basePath: "."
+  config: {
+    inferredKeyFormat: "underscored_crc32",
+    underscoredKeyLength: 50,
+    basePath: ".",
+    directories: []
+  }
 };
 
 module.exports = I18nliner;

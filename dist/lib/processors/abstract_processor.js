@@ -72,7 +72,8 @@ AbstractProcessor.prototype.checkFile = function (file) {
 
 AbstractProcessor.prototype.getDirectories = function () {
   if (this.directories) return this.directories;
-  return [I18nliner.basePath];
+  if (I18nliner.config.directories.length) return I18nliner.config.directories;
+  return [I18nliner.config.basePath];
 };
 
 module.exports = AbstractProcessor;

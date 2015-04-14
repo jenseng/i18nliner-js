@@ -62,7 +62,7 @@ var CallHelpers = {
   },
 
   keyify: function keyify(string) {
-    switch (I18nliner.inferredKeyFormat) {
+    switch (I18nliner.config.inferredKeyFormat) {
       case "underscored":
         return this.keyifyUnderscored(string);
       case "underscored_crc32":
