@@ -70,6 +70,16 @@ describe("TranslateCall", function() {
       });
     });
 
+    it("should truncate long keys", function() {
+      var longString = new Array(100).join("trolololo");
+
+      I18nliner.set('inferredKeyFormat', 'underscored', function() {
+        assert(
+          call(longString).translations()[0][0].length < 100
+        );
+      });
+    });
+
     it("should generate underscored + crc32 keys", function() {
       I18nliner.set('inferredKeyFormat', 'underscored_crc32', function() {
         assert.deepEqual(
