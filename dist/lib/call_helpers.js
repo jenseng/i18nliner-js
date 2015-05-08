@@ -53,7 +53,7 @@ var CallHelpers = {
 
   keyifyUnderscored: function keyifyUnderscored(string) {
     var key = getSlug(string, { separator: "_", lang: false }).replace(/[-_]+/g, "_");
-    return key.substring(0, I18nliner.underscoredKeyLength);
+    return key.substring(0, I18nliner.config.underscoredKeyLength);
   },
 
   keyifyUnderscoredCrc32: function keyifyUnderscoredCrc32(string) {

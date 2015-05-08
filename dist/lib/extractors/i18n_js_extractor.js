@@ -2,9 +2,7 @@
 
 var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 
-var esprima = _interopRequire(require("esprima-fb"));
-
-var estraverse = _interopRequire(require("estraverse-fb"));
+var recast = _interopRequire(require("recast"));
 
 var TranslateCall = _interopRequire(require("./translate_call"));
 
@@ -14,8 +12,11 @@ var CallHelpers = _interopRequire(require("../call_helpers"));
 
 var TranslationHash = _interopRequire(require("./translation_hash"));
 
+var I18nliner = _interopRequire(require("../i18nliner"));
+
 function I18nJsExtractor(options) {
   this.source = options.source;
+  this.ast = options.ast;
 }
 
 Utils.extend(I18nJsExtractor.prototype, CallHelpers);
@@ -32,22 +33,19 @@ I18nJsExtractor.prototype.run = function () {
     this.handler = this.translations.set.bind(this.translations);
   }
 
-  var ast = esprima.parse(this.source, { loc: true });
-  estraverse.traverse(ast, {
-    enter: this.enter.bind(this),
-    leave: this.leave.bind(this)
+  var ast = this.ast || recast.parse(this.source, I18nliner.config.recastOptions);
+  var self = this;
+  recast.visit(ast, {
+    visitCallExpression: function visitCallExpression(path) {
+      self.processCall(path.value);
+      this.traverse(path);
+    }
   });
 };
 
 I18nJsExtractor.prototype.isExtractableCall = function (node, receiver, method) {
   return node.type === "MemberExpression" && !node.computed && receiver.type === "Identifier" && receiver.name === "I18n" && method.type === "Identifier" && (method.name === "t" || method.name === "translate");
 };
-
-I18nJsExtractor.prototype.enter = function (node) {
-  if (node.type === "CallExpression") this.processCall(node);
-};
-
-I18nJsExtractor.prototype.leave = function () {};
 
 I18nJsExtractor.prototype.processCall = function (node) {
   var callee = node.callee;

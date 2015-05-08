@@ -19,7 +19,7 @@ JsProcessor.prototype.I18nJsExtractor = I18nJsExtractor;
 
 JsProcessor.prototype.checkContents = function (source) {
   if (!source.match(/I18n\.t/)) return;
-  var extractor = new this.I18nJsExtractor({ source: this.preProcess(source) });
+  var extractor = new this.I18nJsExtractor(this.preProcess(source));
   extractor.forEach((function (key, value, meta) {
     this.translations.set(key, value, meta);
     this.translationCount++;
@@ -31,7 +31,7 @@ JsProcessor.prototype.sourceFor = function (file) {
 };
 
 JsProcessor.prototype.preProcess = function (source) {
-  return source;
+  return { source: source };
 };
 
 module.exports = JsProcessor;
