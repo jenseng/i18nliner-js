@@ -100,7 +100,7 @@ the usual stuff (placeholders, etc.).
 Sure, but *you* don't need to write them. Just run:
 
 ```bash
-i18nliner dump
+i18nliner export
 ```
 
 This extracts all default translations from your codebase and outputs them
@@ -237,7 +237,7 @@ Ensures that there are no problems with your translate calls (e.g. missing
 interpolation values, reusing a key for a different translation, etc.). **Go
 add this to your Jenkins/Travis tasks.**
 
-### i18nliner dump
+### i18nliner export
 
 Does an `i18nliner check`, and then extracts all default translations from your
 codebase, merges them with any other translation files, and outputs them to
@@ -245,7 +245,7 @@ codebase, merges them with any other translation files, and outputs them to
 
 ### i18nliner diff
 
-Does an `i18nliner dump` and creates a diff from a previous one (path or git
+Does an `i18nliner export` and creates a diff from a previous one (path or git
 commit hash). This is useful if you only want to see what has changed since a
 previous release of your app.
 
@@ -256,8 +256,8 @@ wrappers are present.
 
 #### .i18nignore and more
 
-By default, the check and dump tasks will look for inline translations in any
-.js files. You can tell it to always skip certain
+By default, the check and export tasks will look for inline translations
+in any .js files. You can tell it to always skip certain
 files/directories/patterns by creating a .i18nignore file. The syntax is the
 same as [.gitignore](http://www.kernel.org/pub/software/scm/git/docs/gitignore.html),
 though it supports
