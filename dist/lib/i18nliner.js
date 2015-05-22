@@ -1,11 +1,10 @@
 "use strict";
 
-var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-var fs = _interopRequire(require("fs"));
+var fs;
 
 var I18nliner = {
   ignore: function ignore() {
+    fs = fs || require("fs");
     var ignores = [];
     if (fs.existsSync(".i18nignore")) {
       ignores = fs.readFileSync(".i18nignore").toString().trim().split(/\r?\n|\r/);
@@ -26,6 +25,7 @@ var I18nliner = {
   },
 
   loadConfig: function loadConfig() {
+    fs = fs || require("fs");
     if (fs.existsSync(".i18nrc")) {
       try {
         var config = JSON.parse(fs.readFileSync(".i18nrc").toString());
