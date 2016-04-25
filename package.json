@@ -38,6 +38,6 @@
     "minimist": "^1.1.0",
     "mkdirp": "^0.5.0",
     "recast": "^0.10.12",
-    "speakingurl": "~0.8.2"
+    "speakingurl": "^9.0.0"
   }
 }
