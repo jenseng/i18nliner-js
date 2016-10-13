@@ -37,8 +37,7 @@ I18nJsExtractor.prototype.run = function () {
   var self = this;
   recast.visit(ast, {
     visitCallExpression: function visitCallExpression(path) {
-      self.processCall(path.value);
-      this.traverse(path);
+      self.processCall(path.value, this.traverse.bind(this, path));
     }
   });
 };
@@ -47,7 +46,7 @@ I18nJsExtractor.prototype.isExtractableCall = function (node, receiver, method) 
   return node.type === "MemberExpression" && !node.computed && receiver.type === "Identifier" && receiver.name === "I18n" && method.type === "Identifier" && (method.name === "t" || method.name === "translate");
 };
 
-I18nJsExtractor.prototype.processCall = function (node) {
+I18nJsExtractor.prototype.processCall = function (node, traverse) {
   var callee = node.callee;
   var receiver = callee.object;
   var method = callee.property;
@@ -61,6 +60,8 @@ I18nJsExtractor.prototype.processCall = function (node) {
     var args = this.processArguments(node.arguments);
     this.processTranslateCall(line, receiver, method, args);
   }
+
+  traverse();
 };
 
 I18nJsExtractor.prototype.processArguments = function (args) {
