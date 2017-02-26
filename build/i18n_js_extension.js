@@ -1,4 +1,6 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+
+},{}],2:[function(require,module,exports){
 (function () {
 	'use strict';
 
@@ -100,8 +102,6 @@
 	module.exports.direct = crcDirect;
 	module.exports.table = crcTable;
 }());
-
-},{}],2:[function(require,module,exports){
 
 },{}],3:[function(require,module,exports){
 module.exports = require('./lib/');
@@ -806,70 +806,73 @@ module.exports = require('./lib/');
 
 },{}],5:[function(require,module,exports){
 "use strict";
-var pluralize = require("./pluralize")["default"] || require("./pluralize");
-var Utils = require("./utils")["default"] || require("./utils");
-var I18nliner = require("./i18nliner")["default"] || require("./i18nliner");
-var getSlug = require("speakingurl")["default"] || require("speakingurl");
-var crc32 = require("crc32")["default"] || require("crc32");
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+var pluralize = _interopRequire(require("./pluralize"));
+
+var Utils = _interopRequire(require("./utils"));
+
+var I18nliner = _interopRequire(require("./i18nliner"));
+
+var getSlug = _interopRequire(require("speakingurl"));
+
+var crc32 = _interopRequire(require("crc32"));
 
 var CallHelpers = {
   ALLOWED_PLURALIZATION_KEYS: ["zero", "one", "few", "many", "other"],
   REQUIRED_PLURALIZATION_KEYS: ["one", "other"],
   UNSUPPORTED_EXPRESSION: [],
 
-  normalizeKey: function(key) {
+  normalizeKey: function normalizeKey(key) {
     return key;
   },
 
-  normalizeDefault: function(defaultValue, translateOptions) {
+  normalizeDefault: function normalizeDefault(defaultValue, translateOptions) {
     defaultValue = CallHelpers.inferPluralizationHash(defaultValue, translateOptions);
     return defaultValue;
   },
 
-  inferPluralizationHash: function(defaultValue, translateOptions) {
-    if (typeof defaultValue === 'string' && defaultValue.match(/^[\w-]+$/) && translateOptions && ("count" in translateOptions)) {
-      return {one: "1 " + defaultValue, other: "%{count} " + pluralize(defaultValue)};
-    }
-    else {
+  inferPluralizationHash: function inferPluralizationHash(defaultValue, translateOptions) {
+    if (typeof defaultValue === "string" && defaultValue.match(/^[\w-]+$/) && translateOptions && "count" in translateOptions) {
+      return { one: "1 " + defaultValue, other: "%{count} " + pluralize(defaultValue) };
+    } else {
       return defaultValue;
     }
   },
 
-  isObject: function(object) {
-    return typeof object === 'object' && object !== this.UNSUPPORTED_EXPRESSION;
+  isObject: function isObject(object) {
+    return typeof object === "object" && object !== this.UNSUPPORTED_EXPRESSION;
   },
 
-  validDefault: function(allowBlank) {
+  validDefault: function validDefault(allowBlank) {
     var defaultValue = this.defaultValue;
-    return allowBlank && (typeof defaultValue === 'undefined' || defaultValue === null) ||
-      typeof defaultValue === 'string' ||
-      this.isObject(defaultValue);
+    return allowBlank && (typeof defaultValue === "undefined" || defaultValue === null) || typeof defaultValue === "string" || this.isObject(defaultValue);
   },
 
-  inferKey: function(defaultValue, translateOptions) {
+  inferKey: function inferKey(defaultValue, translateOptions) {
     if (this.validDefault(defaultValue)) {
       defaultValue = this.normalizeDefault(defaultValue, translateOptions);
-      if (typeof defaultValue === 'object')
-        defaultValue = "" + defaultValue.other;
+      if (typeof defaultValue === "object") defaultValue = "" + defaultValue.other;
       return this.keyify(defaultValue);
     }
   },
 
-  keyifyUnderscored: function(string) {
-    var key = getSlug(string, {separator: '_', lang: false}).replace(/[-_]+/g, '_');
-    return key.substring(0, I18nliner.underscoredKeyLength);
+  keyifyUnderscored: function keyifyUnderscored(string) {
+    var key = getSlug(string, { separator: "_", lang: false }).replace(/[-_]+/g, "_");
+    return key.substring(0, I18nliner.config.underscoredKeyLength);
   },
 
-  keyifyUnderscoredCrc32: function(string) {
+  keyifyUnderscoredCrc32: function keyifyUnderscoredCrc32(string) {
     var checksum = crc32(string.length + ":" + string).toString(16);
     return this.keyifyUnderscored(string) + "_" + checksum;
   },
 
-  keyify: function(string) {
-    switch (I18nliner.inferredKeyFormat) {
-      case 'underscored':
+  keyify: function keyify(string) {
+    switch (I18nliner.config.inferredKeyFormat) {
+      case "underscored":
         return this.keyifyUnderscored(string);
-      case 'underscored_crc32':
+      case "underscored_crc32":
         return this.keyifyUnderscoredCrc32(string);
       default:
         return string;
@@ -887,87 +890,79 @@ var CallHelpers = {
    * default_string [, options]
    * default_object, options
    **/
-  isKeyProvided: function(keyOrDefault, defaultOrOptions, maybeOptions) {
-    if (typeof keyOrDefault === 'object')
+  isKeyProvided: function isKeyProvided(keyOrDefault, defaultOrOptions, maybeOptions) {
+    if (typeof keyOrDefault === "object") {
       return false;
-    if (typeof defaultOrOptions === 'string')
+    }if (typeof defaultOrOptions === "string") {
       return true;
-    if (maybeOptions)
+    }if (maybeOptions) {
       return true;
-    if (typeof keyOrDefault === 'string' && keyOrDefault.match(CallHelpers.keyPattern))
+    }if (typeof keyOrDefault === "string" && keyOrDefault.match(CallHelpers.keyPattern)) {
       return true;
-    return false;
+    }return false;
   },
 
-  isPluralizationHash: function(object) {
+  isPluralizationHash: function isPluralizationHash(object) {
     var pKeys;
-    return this.isObject(object) &&
-      (pKeys = Utils.keys(object)) &&
-      pKeys.length > 0 &&
-      Utils.difference(pKeys, this.ALLOWED_PLURALIZATION_KEYS).length === 0;
+    return this.isObject(object) && (pKeys = Utils.keys(object)) && pKeys.length > 0 && Utils.difference(pKeys, this.ALLOWED_PLURALIZATION_KEYS).length === 0;
   },
 
-  inferArguments: function(args, meta) {
-    if (args.length === 2 && typeof args[1] === 'object' && args[1].defaultValue)
+  inferArguments: function inferArguments(args, meta) {
+    if (args.length === 2 && typeof args[1] === "object" && args[1].defaultValue) {
       return args;
-
-    var hasKey = this.isKeyProvided.apply(this, args);
-    if (meta)
-      meta.inferredKey = !hasKey;
-    if (!hasKey)
-      args.unshift(null);
+    }var hasKey = this.isKeyProvided.apply(this, args);
+    if (meta) meta.inferredKey = !hasKey;
+    if (!hasKey) args.unshift(null);
 
     var defaultValue = null;
     var defaultOrOptions = args[1];
-    if (args[2] || typeof defaultOrOptions === 'string' || this.isPluralizationHash(defaultOrOptions))
-      defaultValue = args.splice(1, 1)[0];
-    if (args.length === 1)
-      args.push({});
+    if (args[2] || typeof defaultOrOptions === "string" || this.isPluralizationHash(defaultOrOptions)) defaultValue = args.splice(1, 1)[0];
+    if (args.length === 1) args.push({});
     var options = args[1];
-    if (defaultValue)
-      options.defaultValue = defaultValue;
-    if (!hasKey)
-      args[0] = this.inferKey(defaultValue, options);
+    if (defaultValue) options.defaultValue = defaultValue;
+    if (!hasKey) args[0] = this.inferKey(defaultValue, options);
     return args;
   },
 
-  applyWrappers: function(string, wrappers) {
+  applyWrappers: function applyWrappers(string, wrappers) {
     var i;
     var len;
     var keys;
-    if (typeof wrappers === 'string')
-      wrappers = [wrappers];
+    if (typeof wrappers === "string") wrappers = [wrappers];
     if (wrappers instanceof Array) {
-      for (i = wrappers.length; i; i--)
-        string = this.applyWrapper(string, new Array(i + 1).join("*"), wrappers[i - 1]);
-    }
-    else {
+      for (i = wrappers.length; i; i--) string = this.applyWrapper(string, new Array(i + 1).join("*"), wrappers[i - 1]);
+    } else {
       keys = Utils.keys(wrappers);
-      keys.sort(function(a, b) { return b.length - a.length; }); // longest first
-      for (i = 0, len = keys.length; i < len; i++)
-        string = this.applyWrapper(string, keys[i], wrappers[keys[i]]);
+      keys.sort(function (a, b) {
+        return b.length - a.length;
+      }); // longest first
+      for (i = 0, len = keys.length; i < len; i++) string = this.applyWrapper(string, keys[i], wrappers[keys[i]]);
     }
     return string;
   },
 
-  applyWrapper: function(string, delimiter, wrapper) {
+  applyWrapper: function applyWrapper(string, delimiter, wrapper) {
     var escapedDelimiter = Utils.regexpEscape(delimiter);
     var pattern = new RegExp(escapedDelimiter + "(.*?)" + escapedDelimiter, "g");
     return string.replace(pattern, wrapper);
   }
 };
 
-exports["default"] = CallHelpers;
-},{"./i18nliner":8,"./pluralize":9,"./utils":10,"crc32":1,"speakingurl":3}],6:[function(require,module,exports){
+module.exports = CallHelpers;
+},{"./i18nliner":8,"./pluralize":9,"./utils":10,"crc32":2,"speakingurl":3}],6:[function(require,module,exports){
 "use strict";
-var CallHelpers = require("../call_helpers")["default"] || require("../call_helpers");
-var Utils = require("../utils")["default"] || require("../utils");
 
-var extend = function(I18n) {
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
+var CallHelpers = _interopRequire(require("../call_helpers"));
+
+var Utils = _interopRequire(require("../utils"));
+
+var extend = function extend(I18n) {
   var htmlEscape = Utils.htmlEscape;
 
   I18n.interpolateWithoutHtmlSafety = I18n.interpolate;
-  I18n.interpolate = function(message, options) {
+  I18n.interpolate = function (message, options) {
     var needsEscaping = false;
     var matches = message.match(this.PLACEHOLDER) || [];
     var len = matches.length;
@@ -988,15 +983,12 @@ var extend = function(I18n) {
       key = match.replace(this.PLACEHOLDER, "$1");
       keys.push(key);
       if (!(key in options)) continue;
-      if (match[1] === 'h')
-        options[key] = new Utils.HtmlSafeString(options[key]);
-      if (options[key] instanceof Utils.HtmlSafeString)
-        needsEscaping = true;
+      if (match[1] === "h") options[key] = new Utils.HtmlSafeString(options[key]);
+      if (options[key] instanceof Utils.HtmlSafeString) needsEscaping = true;
     }
 
     if (needsEscaping) {
-      if (!wrappers)
-        message = htmlEscape(message);
+      if (!wrappers) message = htmlEscape(message);
       for (i = 0; i < len; i++) {
         key = keys[i];
         if (!(key in options)) continue;
@@ -1014,86 +1006,101 @@ var extend = function(I18n) {
   I18n.Utils = Utils;
 
   I18n.translateWithoutI18nliner = I18n.translate;
-  I18n.translate = function() {
+  I18n.translate = function () {
     var args = CallHelpers.inferArguments([].slice.call(arguments));
     var key = args[0];
     var options = args[1];
     key = CallHelpers.normalizeKey(key, options);
     var defaultValue = options.defaultValue;
-    if (defaultValue)
-      options.defaultValue = CallHelpers.normalizeDefault(defaultValue, options);
+    if (defaultValue) options.defaultValue = CallHelpers.normalizeDefault(defaultValue, options);
 
     return this.translateWithoutI18nliner(key, options);
   };
   I18n.t = I18n.translate;
 };
 
-exports["default"] = extend;
+module.exports = extend;
 },{"../call_helpers":5,"../utils":10}],7:[function(require,module,exports){
 "use strict";
+
+var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+
 /* global I18n */
-var extend = require("./i18n_js")["default"] || require("./i18n_js");
+
+var extend = _interopRequire(require("./i18n_js"));
+
 extend(I18n);
 },{"./i18n_js":6}],8:[function(require,module,exports){
 "use strict";
-var fs = require("fs")["default"] || require("fs");
+
+var fs;
 
 var I18nliner = {
-  ignore: function() {
+  ignore: function ignore() {
+    fs = fs || require("fs");
     var ignores = [];
     if (fs.existsSync(".i18nignore")) {
       ignores = fs.readFileSync(".i18nignore").toString().trim().split(/\r?\n|\r/);
     }
     return ignores;
   },
-  set: function(key, value, fn) {
-    var prevValue = this[key];
-    this[key] = value;
+
+  set: function set(key, value, fn) {
+    var prevValue = this.config[key];
+    this.config[key] = value;
     if (fn) {
       try {
         fn();
-      }
-      finally {
-        this[key] = prevValue;
+      } finally {
+        this.config[key] = prevValue;
       }
     }
   },
-  inferredKeyFormat: 'underscored_crc32',
-  underscoredKeyLength: 50,
-  basePath: "."
-};
-exports["default"] = I18nliner;
-},{"fs":2}],9:[function(require,module,exports){
-"use strict";
-// ported pluralizations from active_support/inflections.rb
-// (except for cow -> kine, because nobody does that) 
-var skip = ['equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'jeans'];
-var patterns = [
-  [/person$/i, 'people'],
-  [/man$/i, 'men'],
-  [/child$/i, 'children'],
-  [/sex$/i, 'sexes'],
-  [/move$/i, 'moves'],
-  [/(quiz)$/i, '$1zes'],
-  [/^(ox)$/i, '$1en'],
-  [/([m|l])ouse$/i, '$1ice'],
-  [/(matr|vert|ind)(?:ix|ex)$/i, '$1ices'],
-  [/(x|ch|ss|sh)$/i, '$1es'],
-  [/([^aeiouy]|qu)y$/i, '$1ies'],
-  [/(hive)$/i, '$1s'],
-  [/(?:([^f])fe|([lr])f)$/i, '$1$2ves'],
-  [/sis$/i, 'ses'],
-  [/([ti])um$/i, '$1a'],
-  [/(buffal|tomat)o$/i, '$1oes'],
-  [/(bu)s$/i, '$1ses'],
-  [/(alias|status)$/i, '$1es'],
-  [/(octop|vir)us$/i, '$1i'],
-  [/(ax|test)is$/i, '$1es'],
-  [/s$/i, 's']
-];
 
-var pluralize = function(string) {
-  string = string || '';
+  loadConfig: function loadConfig() {
+    fs = fs || require("fs");
+    if (fs.existsSync(".i18nrc")) {
+      try {
+        var config = JSON.parse(fs.readFileSync(".i18nrc").toString());
+        for (var key in config) {
+          if (key === "plugins") {
+            this.loadPlugins(config[key]);
+          } else {
+            this.set(key, config[key]);
+          }
+        }
+      } catch (e) {}
+    }
+  },
+
+  loadPlugins: function loadPlugins(plugins) {
+    plugins.forEach((function (pluginName) {
+      require(pluginName)({
+        processors: this.Commands.Check.processors,
+        config: this.config
+      });
+    }).bind(this));
+  },
+
+  config: {
+    inferredKeyFormat: "underscored_crc32",
+    underscoredKeyLength: 50,
+    basePath: ".",
+    directories: []
+  }
+};
+
+module.exports = I18nliner;
+},{"fs":1}],9:[function(require,module,exports){
+// ported pluralizations from active_support/inflections.rb
+// (except for cow -> kine, because nobody does that)
+"use strict";
+
+var skip = ["equipment", "information", "rice", "money", "species", "series", "fish", "sheep", "jeans"];
+var patterns = [[/person$/i, "people"], [/man$/i, "men"], [/child$/i, "children"], [/sex$/i, "sexes"], [/move$/i, "moves"], [/(quiz)$/i, "$1zes"], [/^(ox)$/i, "$1en"], [/([m|l])ouse$/i, "$1ice"], [/(matr|vert|ind)(?:ix|ex)$/i, "$1ices"], [/(x|ch|ss|sh)$/i, "$1es"], [/([^aeiouy]|qu)y$/i, "$1ies"], [/(hive)$/i, "$1s"], [/(?:([^f])fe|([lr])f)$/i, "$1$2ves"], [/sis$/i, "ses"], [/([ti])um$/i, "$1a"], [/(buffal|tomat)o$/i, "$1oes"], [/(bu)s$/i, "$1ses"], [/(alias|status)$/i, "$1es"], [/(octop|vir)us$/i, "$1i"], [/(ax|test)is$/i, "$1es"], [/s$/i, "s"]];
+
+var pluralize = function pluralize(string) {
+  string = string || "";
   if (skip.indexOf(string) >= 0) {
     return string;
   }
@@ -1106,72 +1113,85 @@ var pluralize = function(string) {
   return string + "s";
 };
 
-pluralize.withCount = function(count, string) {
+pluralize.withCount = function (count, string) {
   return "" + count + " " + (count === 1 ? string : pluralize(string));
 };
 
-exports["default"] = pluralize;
+module.exports = pluralize;
 },{}],10:[function(require,module,exports){
 "use strict";
+
 var htmlEntities = {
   "'": "&#39;",
   "&": "&amp;",
-  '"': "&quot;",
+  "\"": "&quot;",
   ">": "&gt;",
   "<": "&lt;"
 };
 
 function HtmlSafeString(string) {
-  this.string = (typeof string === 'string' ? string : "" + string);
+  this.string = typeof string === "string" ? string : "" + string;
 }
-HtmlSafeString.prototype.toString = function() {
+HtmlSafeString.prototype.toString = function () {
   return this.string;
 };
 
 var Utils = {
   HtmlSafeString: HtmlSafeString,
 
-  difference: function(a1, a2) {
+  difference: function difference(a1, a2) {
     var result = [];
     for (var i = 0, len = a1.length; i < len; i++) {
-      if (a2.indexOf(a1[i]) === -1)
-        result.push(a1[i]);
+      if (a2.indexOf(a1[i]) === -1) result.push(a1[i]);
     }
     return result;
   },
 
-  keys: function(object) {
+  keys: (function (_keys) {
+    var _keysWrapper = function keys(_x) {
+      return _keys.apply(this, arguments);
+    };
+
+    _keysWrapper.toString = function () {
+      return _keys.toString();
+    };
+
+    return _keysWrapper;
+  })(function (object) {
     var keys = [];
     for (var key in object) {
-      if (object.hasOwnProperty(key))
-        keys.push(key);
+      if (object.hasOwnProperty(key)) keys.push(key);
     }
     return keys;
+  }),
+
+  htmlEscape: function htmlEscape(string) {
+    if (typeof string === "undefined" || string === null) {
+      return "";
+    }if (string instanceof Utils.HtmlSafeString) {
+      return string.toString();
+    }return String(string).replace(/[&<>"']/g, function (m) {
+      return htmlEntities[m];
+    });
   },
 
-  htmlEscape: function(string) {
-    if (typeof string === 'undefined' || string === null) return '';
-    if (string instanceof Utils.HtmlSafeString) return string.toString();
-    return String(string).replace(/[&<>"']/g, function(m){ return htmlEntities[m]; });
+  regexpEscape: function regexpEscape(string) {
+    if (typeof string === "undefined" || string === null) {
+      return "";
+    }return String(string).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   },
 
-  regexpEscape: function(string) {
-    if (typeof string === 'undefined' || string === null) return '';
-    return String(string).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-  },
-
-  extend: function() {
+  extend: function extend() {
     var args = [].slice.call(arguments);
     var target = args.shift();
     for (var i = 0, len = args.length; i < len; i++) {
       var source = args[i];
       for (var key in source) {
-        if (source.hasOwnProperty(key))
-          target[key] = source[key];
+        if (source.hasOwnProperty(key)) target[key] = source[key];
       }
     }
   }
 };
 
-exports["default"] = Utils;
-},{}]},{},[7])
+module.exports = Utils;
+},{}]},{},[7]);
