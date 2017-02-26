@@ -12,6 +12,9 @@ module.exports = function(grunt){
     },
 
     babel: {
+      options: {
+        presets: ['latest']
+      },
       testLib: {
         expand: true,
         cwd: 'lib',

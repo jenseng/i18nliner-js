@@ -3,18 +3,12 @@
     "browser": true,
     "node": true
   },
-  "ecmaFeatures": {
-    "arrowFunctions": true,
-    "classes": true,
-    "templateStrings": true,
-    "destructuring": true,
-    "objectLiteralShorthandMethods": true,
-    "spread": true,
-    "restParams": true,
-    "modules": true
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
   },
   "rules": {
-    "indent": [2, 2],
+    "indent": [2, 2, {"SwitchCase": 1}],
     "quotes": 0,
     "strict": 0,
     "curly": 0
