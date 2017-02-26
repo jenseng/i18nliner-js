@@ -56,7 +56,7 @@ is not CJS-compatible :-/, e.g.
 // assuming you shoehorn this in
 var I18n = require("./path/to/cjs'd/i18n");
 // add the runtime extensions
-require("i18nliner/dist/lib/extensions/i18n_js")["default"](I18n);
+require("i18nliner/dist/lib/extensions/i18n_js").default(I18n);
 ```
 
 ### amd
@@ -227,6 +227,32 @@ This is equivalent to:
 ```javascript
 I18n.t({one: "1 person", other: "%{count} people"},
   {count: users.length});
+```
+
+## Configuration
+
+### .i18nignore
+
+I18nliner supports a .gitignore-style file, so you can exclude certain
+files and directories from processing. Just create a .i18nignore file, and
+add patterns as necessary.
+
+### .i18nrc
+
+If you have an .i18nrc containing valid JSON, I18nliner will use it to
+override default settings. This can be useful for overriding anything in
+the [default config](https://github.com/jenseng/i18nliner-js/blob/master/lib/i18nliner.js#L52)
+or for [activating plugins](https://github.com/jenseng/react-i18nliner#2-add-react-i18nliner).
+For example:
+
+```json
+{
+  "directories": ["app"],
+  "plugins": [
+    "react-i18nliner",
+    "i18nliner-handlebars",
+  ]
+}
 ```
 
 ## Command Line Utility

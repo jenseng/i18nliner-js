@@ -39,6 +39,10 @@ describe("I18nJsExtractor", function() {
         {bar: "Baz"}
       );
       assert.deepEqual(
+        extract("I18n.t('bar', `Baz`)"),
+        {bar: "Baz"}
+      );
+      assert.deepEqual(
         extract("I18n.translate('one', {one: '1', other: '2'}, {count: 1})"),
         {one: {one: "1", other: "2"}}
       );

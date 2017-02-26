@@ -34,12 +34,13 @@
     "test": "./node_modules/.bin/grunt test && mocha tmp/test --recursive"
   },
   "dependencies": {
+    "babel-traverse": "^6.0.0",
+    "babylon": "^6.0.0",
     "cli-color": "~1.2.0",
     "crc32": "~0.2.2",
     "gglobby": "0.0.3",
     "minimist": "~1.2.0",
     "mkdirp": "~0.5.1",
-    "recast": "0.11.22",
     "speakingurl": "13.0.0"
   }
 }
