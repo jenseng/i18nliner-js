@@ -40,7 +40,7 @@ several options for installing/including the runtime extensions:
 
 ### regular old script
 
-Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18n_js_extension.js)
+Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/dist/i18n_js_extension.js)
 and include them on the page after i18n.js (via `<script>`, asset pipeline, etc).
 
 ### npm
@@ -61,7 +61,7 @@ require("i18nliner/dist/lib/extensions/i18n_js").default(I18n);
 
 ### amd
 
-Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/build/i18n_js_extension.js)
+Download the [runtime extensions](https://github.com/jenseng/i18nliner-js/blob/master/dist/i18n_js_extension.js)
 and use the requirejs shim config to add them (and i18n.js) to your app, e.g.
 
 ```javascript

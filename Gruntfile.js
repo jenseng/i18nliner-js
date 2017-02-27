@@ -36,7 +36,7 @@ module.exports = function(grunt){
     browserify: {
       dist: {
         files: {
-          'build/i18n_js_extension.js': ['tmp/lib/extensions/i18n_js_build.js']
+          'dist/i18n_js_extension.js': ['tmp/lib/extensions/i18n_js_build.js']
         }
       }
     },
