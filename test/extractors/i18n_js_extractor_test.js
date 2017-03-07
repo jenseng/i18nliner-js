@@ -2,11 +2,13 @@
 import {assert} from "chai";
 import I18nJsExtractor from "../../lib/extractors/i18n_js_extractor";
 import Errors from "../../lib/errors";
+import JsProcessor from "../../lib/processors/js_processor"
 
 describe("I18nJsExtractor", function() {
   describe(".translations", function() {
     function extract(source) {
-      var extractor = new I18nJsExtractor({source: source});
+      var ast = JsProcessor.prototype.parse(source);
+      var extractor = new I18nJsExtractor({ast: ast});
       extractor.run();
       return extractor.translations.translations;
     }
