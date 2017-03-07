@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _babylon = require("babylon");
-
 var _babelTraverse = require("babel-traverse");
 
 var _babelTraverse2 = _interopRequireDefault(_babelTraverse);
@@ -33,7 +31,6 @@ var _i18nliner2 = _interopRequireDefault(_i18nliner);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function I18nJsExtractor(options) {
-  this.source = options.source;
   this.ast = options.ast;
 }
 
@@ -51,9 +48,7 @@ I18nJsExtractor.prototype.run = function () {
     this.handler = this.translations.set.bind(this.translations);
   }
 
-  var ast = this.ast || (0, _babylon.parse)(this.source, { plugins: ["jsx", "classProperties", "objectRestSpread"] });
-  var self = this;
-  (0, _babelTraverse2.default)(ast, {
+  (0, _babelTraverse2.default)(this.ast, {
     enter: this.enter.bind(this),
     exit: this.exit.bind(this)
   });

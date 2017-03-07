@@ -50,7 +50,9 @@ var I18nliner = {
   },
   loadPlugins: function loadPlugins(plugins) {
     plugins.forEach(function (pluginName) {
-      require(pluginName).default({
+      var plugin = require(pluginName);
+      if (plugin.default) plugin = plugin.default;
+      plugin({
         processors: this.Commands.Check.processors,
         config: this.config
       });

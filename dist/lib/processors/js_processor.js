@@ -8,6 +8,8 @@ var _fs = require("fs");
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _babylon = require("babylon");
+
 var _abstract_processor = require("./abstract_processor");
 
 var _abstract_processor2 = _interopRequireDefault(_abstract_processor);
@@ -30,6 +32,7 @@ JsProcessor.prototype.I18nJsExtractor = _i18n_js_extractor2.default;
 JsProcessor.prototype.checkContents = function (source) {
   var fileData = this.preProcess(source);
   if (fileData.skip) return;
+  fileData.ast = fileData.ast || this.parse(fileData.source);
   var extractor = new this.I18nJsExtractor(fileData);
   extractor.forEach(function (key, value, meta) {
     this.translations.set(key, value, meta);
@@ -39,6 +42,10 @@ JsProcessor.prototype.checkContents = function (source) {
 
 JsProcessor.prototype.sourceFor = function (file) {
   return _fs2.default.readFileSync(file).toString();
+};
+
+JsProcessor.prototype.parse = function (source) {
+  return (0, _babylon.parse)(source, { plugins: ["jsx", "classProperties", "objectRestSpread"], sourceType: "module" });
 };
 
 JsProcessor.prototype.preProcess = function (source) {
