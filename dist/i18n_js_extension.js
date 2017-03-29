@@ -1985,12 +1985,17 @@ var I18nliner = {
   },
   loadConfig: function loadConfig() {
     var config = maybeLoadJSON(".i18nrc");
+
     for (var key in config) {
-      if (key === "plugins") {
-        this.loadPlugins(config[key]);
-      } else {
+      if (key !== "plugins") {
         this.set(key, config[key]);
       }
+    }
+
+    // plugins need to be loaded last to allow them to get
+    //  the full config option when they are initialized
+    if (config.plugins && config.plugins.length > 0) {
+      this.loadPlugins(config.plugins);
     }
   },
   loadPlugins: function loadPlugins(plugins) {
