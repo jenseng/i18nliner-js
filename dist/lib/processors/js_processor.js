@@ -18,6 +18,10 @@ var _i18n_js_extractor = require("../extractors/i18n_js_extractor");
 
 var _i18n_js_extractor2 = _interopRequireDefault(_i18n_js_extractor);
 
+var _i18nliner = require("../i18nliner");
+
+var _i18nliner2 = _interopRequireDefault(_i18nliner);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function JsProcessor(translations, options) {
@@ -45,7 +49,7 @@ JsProcessor.prototype.sourceFor = function (file) {
 };
 
 JsProcessor.prototype.parse = function (source) {
-  return (0, _babylon.parse)(source, { plugins: ["jsx", "classProperties", "objectRestSpread"], sourceType: "module" });
+  return (0, _babylon.parse)(source, { plugins: _i18nliner2.default.config.babylonPlugins, sourceType: "module" });
 };
 
 JsProcessor.prototype.preProcess = function (source) {
