@@ -2,4 +2,5 @@
 
 var minimist = require('minimist');
 var argv = require('minimist')(process.argv.slice(2));
-require('../dist/lib/main').default.Commands.run(argv._[0], argv);
+var success = require('../dist/lib/main').default.Commands.run(argv._[0], argv);
+process.exit(success ? 0 : 1);
