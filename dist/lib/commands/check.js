@@ -3,50 +3,46 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _cliColor = require("cli-color");
+var _cliColor = _interopRequireDefault(require("cli-color"));
 
-var _cliColor2 = _interopRequireDefault(_cliColor);
+var _translation_hash = _interopRequireDefault(require("../extractors/translation_hash"));
 
-var _translation_hash = require("../extractors/translation_hash");
+var _generic_command = _interopRequireDefault(require("./generic_command"));
 
-var _translation_hash2 = _interopRequireDefault(_translation_hash);
-
-var _generic_command = require("./generic_command");
-
-var _generic_command2 = _interopRequireDefault(_generic_command);
-
-var _js_processor = require("../processors/js_processor");
-
-var _js_processor2 = _interopRequireDefault(_js_processor);
+var _js_processor = _interopRequireDefault(require("../processors/js_processor"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var red = _cliColor2.default.red;
-var green = _cliColor2.default.green;
+var red = _cliColor.default.red;
+var green = _cliColor.default.green;
 
 function sum(array, prop) {
   var total = 0;
+
   for (var i = 0, len = array.length; i < len; i++) {
     total += array[i][prop];
   }
+
   return total;
 }
 
 function Check(options) {
-  _generic_command2.default.call(this, options);
+  _generic_command.default.call(this, options);
+
   this.errors = [];
   this.translations = new this.TranslationHash();
   this.setUpProcessors();
 }
 
-Check.prototype = Object.create(_generic_command2.default.prototype);
+Check.prototype = Object.create(_generic_command.default.prototype);
 Check.prototype.constructor = Check;
-
-Check.prototype.TranslationHash = _translation_hash2.default;
+Check.prototype.TranslationHash = _translation_hash.default;
 
 Check.prototype.setUpProcessors = function () {
   this.processors = [];
+
   for (var key in Check.processors) {
     var Processor = Check.processors[key];
     this.processors.push(new Processor(this.translations, {
@@ -84,16 +80,15 @@ Check.prototype.printSummary = function () {
   var errors = this.errors;
   var errorsLen = errors.length;
   var i;
-
   var translationCount = sum(processors, 'translationCount');
   var fileCount = sum(processors, 'fileCount');
   var elapsed = new Date().getTime() - this.startTime;
-
   this.print("\n\n");
 
   for (i = 0; i < errorsLen; i++) {
     this.print(i + 1 + ")\n" + red(errors[i]) + "\n\n");
   }
+
   this.print("Finished in " + elapsed / 1000 + " seconds\n\n");
   summary = fileCount + " files, " + translationCount + " strings, " + errorsLen + " failures";
   this.print((this.isSuccess() ? green : red)(summary) + "\n");
@@ -106,6 +101,8 @@ Check.prototype.run = function () {
   return this.isSuccess();
 };
 
-Check.processors = { JsProcessor: _js_processor2.default };
-
-exports.default = Check;
+Check.processors = {
+  JsProcessor: _js_processor.default
+};
+var _default = Check;
+exports.default = _default;

@@ -3,19 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _check = require("./commands/check");
+var _check = _interopRequireDefault(require("./commands/check"));
 
-var _check2 = _interopRequireDefault(_check);
-
-var _export = require("./commands/export");
-
-var _export2 = _interopRequireDefault(_export);
+var _export = _interopRequireDefault(require("./commands/export"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* global process */
-
 var error = process.stderr.write.bind(process.stderr);
 
 function capitalize(string) {
@@ -26,6 +22,7 @@ var Commands = {
   run: function run(name, options) {
     options = options || {};
     var Command = this[capitalize(name)];
+
     if (Command) {
       try {
         return new Command(options).run();
@@ -35,11 +32,11 @@ var Commands = {
     } else {
       error("unknown command " + name + "\n");
     }
+
     return false;
   },
-
-  Check: _check2.default,
-  Export: _export2.default
+  Check: _check.default,
+  Export: _export.default
 };
-
-exports.default = Commands;
+var _default = Commands;
+exports.default = _default;
