@@ -3,35 +3,28 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _fs = require("fs");
+var _fs = _interopRequireDefault(require("fs"));
 
-var _fs2 = _interopRequireDefault(_fs);
+var _parser = require("@babel/parser");
 
-var _babylon = require("babylon");
+var _abstract_processor = _interopRequireDefault(require("./abstract_processor"));
 
-var _abstract_processor = require("./abstract_processor");
+var _i18n_js_extractor = _interopRequireDefault(require("../extractors/i18n_js_extractor"));
 
-var _abstract_processor2 = _interopRequireDefault(_abstract_processor);
-
-var _i18n_js_extractor = require("../extractors/i18n_js_extractor");
-
-var _i18n_js_extractor2 = _interopRequireDefault(_i18n_js_extractor);
-
-var _i18nliner = require("../i18nliner");
-
-var _i18nliner2 = _interopRequireDefault(_i18nliner);
+var _i18nliner = _interopRequireDefault(require("../i18nliner"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function JsProcessor(translations, options) {
-  _abstract_processor2.default.call(this, translations, options);
+  _abstract_processor.default.call(this, translations, options);
 }
 
-JsProcessor.prototype = Object.create(_abstract_processor2.default.prototype);
+JsProcessor.prototype = Object.create(_abstract_processor.default.prototype);
 JsProcessor.prototype.constructor = JsProcessor;
 JsProcessor.prototype.defaultPattern = "**/*.js";
-JsProcessor.prototype.I18nJsExtractor = _i18n_js_extractor2.default;
+JsProcessor.prototype.I18nJsExtractor = _i18n_js_extractor.default;
 
 JsProcessor.prototype.checkContents = function (source) {
   var fileData = this.preProcess(source);
@@ -45,11 +38,14 @@ JsProcessor.prototype.checkContents = function (source) {
 };
 
 JsProcessor.prototype.sourceFor = function (file) {
-  return _fs2.default.readFileSync(file).toString();
+  return _fs.default.readFileSync(file).toString();
 };
 
 JsProcessor.prototype.parse = function (source) {
-  return (0, _babylon.parse)(source, { plugins: _i18nliner2.default.config.babylonPlugins, sourceType: "module" });
+  return (0, _parser.parse)(source, {
+    plugins: _i18nliner.default.config.babylonPlugins,
+    sourceType: "module"
+  });
 };
 
 JsProcessor.prototype.preProcess = function (source) {
@@ -59,4 +55,5 @@ JsProcessor.prototype.preProcess = function (source) {
   };
 };
 
-exports.default = JsProcessor;
+var _default = JsProcessor;
+exports.default = _default;

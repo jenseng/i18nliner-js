@@ -1,14 +1,11 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _errors = require('../errors');
-
-var _errors2 = _interopRequireDefault(_errors);
+var _errors = _interopRequireDefault(require("../errors"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22,12 +19,13 @@ TranslationHash.prototype.set = function (key, value, meta) {
   var finalKey = parts[parts.length - 1];
 
   if (context[finalKey]) {
-    if (_typeof(context[finalKey]) === 'object') {
-      throw new _errors2.default.KeyAsScope(meta.line, key);
+    if (typeof context[finalKey] === 'object') {
+      throw new _errors.default.KeyAsScope(meta.line, key);
     } else if (context[finalKey] !== value) {
-      throw new _errors2.default.KeyInUse(meta.line, key);
+      throw new _errors.default.KeyInUse(meta.line, key);
     }
   }
+
   context[finalKey] = value;
 };
 
@@ -39,12 +37,16 @@ TranslationHash.prototype.getScope = function (parts, meta) {
 
   for (i = 0; i < partsLen; i++) {
     key = parts[i];
+
     if (typeof context[key] === 'string') {
-      throw new _errors2.default.KeyAsScope(meta.line, parts.slice(0, i + 1).join("."));
+      throw new _errors.default.KeyAsScope(meta.line, parts.slice(0, i + 1).join("."));
     }
+
     context = context[key] || (context[key] = {});
   }
+
   return context;
 };
 
-exports.default = TranslationHash;
+var _default = TranslationHash;
+exports.default = _default;

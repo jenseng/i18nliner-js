@@ -13,7 +13,7 @@ module.exports = function(grunt){
 
     babel: {
       options: {
-        presets: ['latest']
+        presets: ['@babel/preset-env']
       },
       testLib: {
         expand: true,
