@@ -1,8 +1,9 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 // ported pluralizations from active_support/inflections.rb
 // (except for cow -> kine, because nobody does that)
 var skip = ['equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'jeans'];
@@ -10,15 +11,19 @@ var patterns = [[/person$/i, 'people'], [/man$/i, 'men'], [/child$/i, 'children'
 
 var pluralize = function pluralize(string) {
   string = string || '';
+
   if (skip.indexOf(string) >= 0) {
     return string;
   }
+
   for (var i = 0, len = patterns.length; i < len; i++) {
     var pair = patterns[i];
+
     if (string.match(pair[0])) {
       return string.replace(pair[0], pair[1]);
     }
   }
+
   return string + "s";
 };
 
@@ -26,4 +31,5 @@ pluralize.withCount = function (count, string) {
   return "" + count + " " + (count === 1 ? string : pluralize(string));
 };
 
-exports.default = pluralize;
+var _default = pluralize;
+exports["default"] = _default;

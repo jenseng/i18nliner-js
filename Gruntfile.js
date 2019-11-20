@@ -13,7 +13,11 @@ module.exports = function(grunt){
 
     babel: {
       options: {
-        presets: ['latest']
+        presets: [
+          "@babel/preset-env",
+          "@babel/preset-react",
+          "@babel/preset-flow"
+        ],
       },
       testLib: {
         expand: true,

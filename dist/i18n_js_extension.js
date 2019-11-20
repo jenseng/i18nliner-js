@@ -1,4 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+
+},{}],2:[function(require,module,exports){
 (function () {
 	'use strict';
 
@@ -100,8 +102,6 @@
 	module.exports.direct = crcDirect;
 	module.exports.table = crcTable;
 }());
-
-},{}],2:[function(require,module,exports){
 
 },{}],3:[function(require,module,exports){
 module.exports = require('./lib/speakingurl');
@@ -1690,96 +1690,85 @@ module.exports = require('./lib/speakingurl');
     }
 })(this);
 },{}],5:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _pluralize = _interopRequireDefault(require("./pluralize"));
 
-var _pluralize = require('./pluralize');
+var _utils = _interopRequireDefault(require("./utils"));
 
-var _pluralize2 = _interopRequireDefault(_pluralize);
+var _i18nliner = _interopRequireDefault(require("./i18nliner"));
 
-var _utils = require('./utils');
+var _speakingurl = _interopRequireDefault(require("speakingurl"));
 
-var _utils2 = _interopRequireDefault(_utils);
+var _crc = _interopRequireDefault(require("crc32"));
 
-var _i18nliner = require('./i18nliner');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _i18nliner2 = _interopRequireDefault(_i18nliner);
-
-var _speakingurl = require('speakingurl');
-
-var _speakingurl2 = _interopRequireDefault(_speakingurl);
-
-var _crc = require('crc32');
-
-var _crc2 = _interopRequireDefault(_crc);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var CallHelpers = {
   ALLOWED_PLURALIZATION_KEYS: ["zero", "one", "few", "many", "other"],
   REQUIRED_PLURALIZATION_KEYS: ["one", "other"],
   UNSUPPORTED_EXPRESSION: [],
-
   normalizeKey: function normalizeKey(key) {
     return key;
   },
-
   normalizeDefault: function normalizeDefault(defaultValue, translateOptions) {
     defaultValue = CallHelpers.inferPluralizationHash(defaultValue, translateOptions);
     return defaultValue;
   },
-
   inferPluralizationHash: function inferPluralizationHash(defaultValue, translateOptions) {
     if (typeof defaultValue === 'string' && defaultValue.match(/^[\w-]+$/) && translateOptions && "count" in translateOptions) {
-      return { one: "1 " + defaultValue, other: "%{count} " + (0, _pluralize2.default)(defaultValue) };
+      return {
+        one: "1 " + defaultValue,
+        other: "%{count} " + (0, _pluralize["default"])(defaultValue)
+      };
     } else {
       return defaultValue;
     }
   },
-
   isObject: function isObject(object) {
-    return (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === 'object' && object !== this.UNSUPPORTED_EXPRESSION;
+    return _typeof(object) === 'object' && object !== this.UNSUPPORTED_EXPRESSION;
   },
-
   validDefault: function validDefault(allowBlank) {
     var defaultValue = this.defaultValue;
     return allowBlank && (typeof defaultValue === 'undefined' || defaultValue === null) || typeof defaultValue === 'string' || this.isObject(defaultValue);
   },
-
   inferKey: function inferKey(defaultValue, translateOptions) {
     if (this.validDefault(defaultValue)) {
       defaultValue = this.normalizeDefault(defaultValue, translateOptions);
-      if ((typeof defaultValue === 'undefined' ? 'undefined' : _typeof(defaultValue)) === 'object') defaultValue = "" + defaultValue.other;
+      if (_typeof(defaultValue) === 'object') defaultValue = "" + defaultValue.other;
       return this.keyify(defaultValue);
     }
   },
-
   keyifyUnderscored: function keyifyUnderscored(string) {
-    var key = (0, _speakingurl2.default)(string, { separator: '_', lang: false }).replace(/[-_]+/g, '_');
-    return key.substring(0, _i18nliner2.default.config.underscoredKeyLength);
+    var key = (0, _speakingurl["default"])(string, {
+      separator: '_',
+      lang: false
+    }).replace(/[-_]+/g, '_');
+    return key.substring(0, _i18nliner["default"].config.underscoredKeyLength);
   },
-
   keyifyUnderscoredCrc32: function keyifyUnderscoredCrc32(string) {
-    var checksum = (0, _crc2.default)(string.length + ":" + string).toString(16);
+    var checksum = (0, _crc["default"])(string.length + ":" + string).toString(16);
     return this.keyifyUnderscored(string) + "_" + checksum;
   },
-
   keyify: function keyify(string) {
-    switch (_i18nliner2.default.config.inferredKeyFormat) {
+    switch (_i18nliner["default"].config.inferredKeyFormat) {
       case 'underscored':
         return this.keyifyUnderscored(string);
+
       case 'underscored_crc32':
         return this.keyifyUnderscoredCrc32(string);
+
       default:
         return string;
     }
   },
-
   keyPattern: /^(\w+\.)+\w+$/,
 
   /**
@@ -1792,25 +1781,21 @@ var CallHelpers = {
    * default_object, options
    **/
   isKeyProvided: function isKeyProvided(keyOrDefault, defaultOrOptions, maybeOptions) {
-    if ((typeof keyOrDefault === 'undefined' ? 'undefined' : _typeof(keyOrDefault)) === 'object') return false;
+    if (_typeof(keyOrDefault) === 'object') return false;
     if (typeof defaultOrOptions === 'string') return true;
     if (maybeOptions) return true;
     if (typeof keyOrDefault === 'string' && keyOrDefault.match(CallHelpers.keyPattern)) return true;
     return false;
   },
-
   isPluralizationHash: function isPluralizationHash(object) {
     var pKeys;
-    return this.isObject(object) && (pKeys = _utils2.default.keys(object)) && pKeys.length > 0 && _utils2.default.difference(pKeys, this.ALLOWED_PLURALIZATION_KEYS).length === 0;
+    return this.isObject(object) && (pKeys = _utils["default"].keys(object)) && pKeys.length > 0 && _utils["default"].difference(pKeys, this.ALLOWED_PLURALIZATION_KEYS).length === 0;
   },
-
   inferArguments: function inferArguments(args, meta) {
     if (args.length === 2 && _typeof(args[1]) === 'object' && args[1].defaultValue) return args;
-
     var hasKey = this.isKeyProvided.apply(this, args);
     if (meta) meta.inferredKey = !hasKey;
     if (!hasKey) args.unshift(null);
-
     var defaultValue = null;
     var defaultOrOptions = args[1];
     if (args[2] || typeof defaultOrOptions === 'string' || this.isPluralizationHash(defaultOrOptions)) defaultValue = args.splice(1, 1)[0];
@@ -1820,58 +1805,57 @@ var CallHelpers = {
     if (!hasKey) args[0] = this.inferKey(defaultValue, options);
     return args;
   },
-
   applyWrappers: function applyWrappers(string, wrappers) {
     var i;
     var len;
     var keys;
     if (typeof wrappers === 'string') wrappers = [wrappers];
+
     if (wrappers instanceof Array) {
       for (i = wrappers.length; i; i--) {
         string = this.applyWrapper(string, new Array(i + 1).join("*"), wrappers[i - 1]);
       }
     } else {
-      keys = _utils2.default.keys(wrappers);
+      keys = _utils["default"].keys(wrappers);
       keys.sort(function (a, b) {
         return b.length - a.length;
       }); // longest first
+
       for (i = 0, len = keys.length; i < len; i++) {
         string = this.applyWrapper(string, keys[i], wrappers[keys[i]]);
       }
     }
+
     return string;
   },
-
   applyWrapper: function applyWrapper(string, delimiter, wrapper) {
-    var escapedDelimiter = _utils2.default.regexpEscape(delimiter);
+    var escapedDelimiter = _utils["default"].regexpEscape(delimiter);
+
     var pattern = new RegExp(escapedDelimiter + "(.*?)" + escapedDelimiter, "g");
     return string.replace(pattern, wrapper);
   }
 };
+var _default = CallHelpers;
+exports["default"] = _default;
 
-exports.default = CallHelpers;
-
-},{"./i18nliner":8,"./pluralize":9,"./utils":10,"crc32":1,"speakingurl":3}],6:[function(require,module,exports){
-'use strict';
+},{"./i18nliner":8,"./pluralize":9,"./utils":10,"crc32":2,"speakingurl":3}],6:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 
-var _call_helpers = require('../call_helpers');
+var _call_helpers = _interopRequireDefault(require("../call_helpers"));
 
-var _call_helpers2 = _interopRequireDefault(_call_helpers);
+var _utils = _interopRequireDefault(require("../utils"));
 
-var _utils = require('../utils');
-
-var _utils2 = _interopRequireDefault(_utils);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var extend = function extend(I18n) {
-  var htmlEscape = _utils2.default.htmlEscape;
-
+  var htmlEscape = _utils["default"].htmlEscape;
   I18n.interpolateWithoutHtmlSafety = I18n.interpolate;
+
   I18n.interpolate = function (message, options) {
     var needsEscaping = false;
     var matches = message.match(this.PLACEHOLDER) || [];
@@ -1885,7 +1869,7 @@ var extend = function extend(I18n) {
     if (wrappers) {
       needsEscaping = true;
       message = htmlEscape(message);
-      message = _call_helpers2.default.applyWrappers(message, wrappers);
+      message = _call_helpers["default"].applyWrappers(message, wrappers);
     }
 
     for (i = 0; i < len; i++) {
@@ -1893,54 +1877,56 @@ var extend = function extend(I18n) {
       key = match.replace(this.PLACEHOLDER, "$1");
       keys.push(key);
       if (!(key in options)) continue;
-      if (match[1] === 'h') options[key] = new _utils2.default.HtmlSafeString(options[key]);
-      if (options[key] instanceof _utils2.default.HtmlSafeString) needsEscaping = true;
+      if (match[1] === 'h') options[key] = new _utils["default"].HtmlSafeString(options[key]);
+      if (options[key] instanceof _utils["default"].HtmlSafeString) needsEscaping = true;
     }
 
     if (needsEscaping) {
       if (!wrappers) message = htmlEscape(message);
+
       for (i = 0; i < len; i++) {
         key = keys[i];
         if (!(key in options)) continue;
         options[key] = htmlEscape(options[key]);
       }
     }
+
     message = this.interpolateWithoutHtmlSafety(message, options);
-    return needsEscaping ? new _utils2.default.HtmlSafeString(message) : message;
-  };
+    return needsEscaping ? new _utils["default"].HtmlSafeString(message) : message;
+  }; // add html-safety hint, i.e. "%h{...}"
 
-  // add html-safety hint, i.e. "%h{...}"
+
   I18n.PLACEHOLDER = /(?:\{\{|%h?\{)(.*?)(?:\}\}?)/gm;
-
-  I18n.CallHelpers = _call_helpers2.default;
-  I18n.Utils = _utils2.default;
-
+  I18n.CallHelpers = _call_helpers["default"];
+  I18n.Utils = _utils["default"];
   I18n.translateWithoutI18nliner = I18n.translate;
+
   I18n.translate = function () {
-    var args = _call_helpers2.default.inferArguments([].slice.call(arguments));
+    var args = _call_helpers["default"].inferArguments([].slice.call(arguments));
+
     var key = args[0];
     var options = args[1];
-    key = _call_helpers2.default.normalizeKey(key, options);
+    key = _call_helpers["default"].normalizeKey(key, options);
     var defaultValue = options.defaultValue;
-    if (defaultValue) options.defaultValue = _call_helpers2.default.normalizeDefault(defaultValue, options);
-
+    if (defaultValue) options.defaultValue = _call_helpers["default"].normalizeDefault(defaultValue, options);
     return this.translateWithoutI18nliner(key, options);
   };
+
   I18n.t = I18n.translate;
 };
 
-exports.default = extend;
+var _default = extend;
+exports["default"] = _default;
 
 },{"../call_helpers":5,"../utils":10}],7:[function(require,module,exports){
-'use strict';
+"use strict";
 
-var _i18n_js = require('./i18n_js');
+var _i18n_js = _interopRequireDefault(require("./i18n_js"));
 
-var _i18n_js2 = _interopRequireDefault(_i18n_js);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-(0, _i18n_js2.default)(I18n); /* global I18n */
+/* global I18n */
+(0, _i18n_js["default"])(I18n);
 
 },{"./i18n_js":6}],8:[function(require,module,exports){
 "use strict";
@@ -1948,11 +1934,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 var fs;
 
 var maybeLoadJSON = function maybeLoadJSON(path) {
   fs = fs || require("fs");
   var data = {};
+
   if (fs.existsSync(path)) {
     try {
       data = JSON.parse(fs.readFileSync(path).toString());
@@ -1960,6 +1948,7 @@ var maybeLoadJSON = function maybeLoadJSON(path) {
       console.log(e);
     }
   }
+
   return data;
 };
 
@@ -1967,14 +1956,17 @@ var I18nliner = {
   ignore: function ignore() {
     fs = fs || require("fs");
     var ignores = [];
+
     if (fs.existsSync(".i18nignore")) {
       ignores = fs.readFileSync(".i18nignore").toString().trim().split(/\r?\n|\r/);
     }
+
     return ignores;
   },
   set: function set(key, value, fn) {
     var prevValue = this.config[key];
     this.config[key] = value;
+
     if (fn) {
       try {
         fn();
@@ -1990,10 +1982,10 @@ var I18nliner = {
       if (key !== "plugins") {
         this.set(key, config[key]);
       }
-    }
-
-    // plugins need to be loaded last to allow them to get
+    } // plugins need to be loaded last to allow them to get
     //  the full config option when they are initialized
+
+
     if (config.plugins && config.plugins.length > 0) {
       this.loadPlugins(config.plugins);
     }
@@ -2001,17 +1993,17 @@ var I18nliner = {
   loadPlugins: function loadPlugins(plugins) {
     plugins.forEach(function (pluginName) {
       var plugin = require(pluginName);
-      if (plugin.default) plugin = plugin.default;
+
+      if (plugin["default"]) plugin = plugin["default"];
       plugin({
         processors: this.Commands.Check.processors,
         config: this.config
       });
     }.bind(this));
   },
-
-
   config: {
     inferredKeyFormat: 'underscored_crc32',
+
     /*
       literal:
         Just use the literal string as its translation key
@@ -2021,37 +2013,37 @@ var I18nliner = {
       underscored_crc32:
         Underscored, with a checksum at the end to avoid collisions
     */
-
     underscoredKeyLength: 50,
-
     basePath: ".",
+
     /*
       Where to look for files. Additionally, the output json file
       will be relative to this.
      */
-
     directories: [],
+
     /*
       Further limit extraction to these directories. If empty,
       I18nliner will look everywhere under <basePath>
      */
-
     babylonPlugins: ["jsx", "classProperties", "objectRestSpread"]
     /*
       The set of babylon plugins to use in AST parsing.
       See: https://github.com/babel/babel/tree/master/packages/babylon#plugins
      */
+
   }
 };
+var _default = I18nliner;
+exports["default"] = _default;
 
-exports.default = I18nliner;
-
-},{"fs":2}],9:[function(require,module,exports){
-'use strict';
+},{"fs":1}],9:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 // ported pluralizations from active_support/inflections.rb
 // (except for cow -> kine, because nobody does that)
 var skip = ['equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'jeans'];
@@ -2059,15 +2051,19 @@ var patterns = [[/person$/i, 'people'], [/man$/i, 'men'], [/child$/i, 'children'
 
 var pluralize = function pluralize(string) {
   string = string || '';
+
   if (skip.indexOf(string) >= 0) {
     return string;
   }
+
   for (var i = 0, len = patterns.length; i < len; i++) {
     var pair = patterns[i];
+
     if (string.match(pair[0])) {
       return string.replace(pair[0], pair[1]);
     }
   }
+
   return string + "s";
 };
 
@@ -2075,7 +2071,8 @@ pluralize.withCount = function (count, string) {
   return "" + count + " " + (count === 1 ? string : pluralize(string));
 };
 
-exports.default = pluralize;
+var _default = pluralize;
+exports["default"] = _default;
 
 },{}],10:[function(require,module,exports){
 "use strict";
@@ -2083,6 +2080,7 @@ exports.default = pluralize;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports["default"] = void 0;
 var htmlEntities = {
   "'": "&#39;",
   "&": "&amp;",
@@ -2094,29 +2092,31 @@ var htmlEntities = {
 function HtmlSafeString(string) {
   this.string = typeof string === 'string' ? string : "" + string;
 }
+
 HtmlSafeString.prototype.toString = function () {
   return this.string;
 };
 
 var Utils = {
   HtmlSafeString: HtmlSafeString,
-
   difference: function difference(a1, a2) {
     var result = [];
+
     for (var i = 0, len = a1.length; i < len; i++) {
       if (a2.indexOf(a1[i]) === -1) result.push(a1[i]);
     }
+
     return result;
   },
-
   keys: function keys(object) {
     var keys = [];
+
     for (var key in object) {
       if (object.hasOwnProperty(key)) keys.push(key);
     }
+
     return keys;
   },
-
   htmlEscape: function htmlEscape(string) {
     if (typeof string === 'undefined' || string === null) return '';
     if (string instanceof Utils.HtmlSafeString) return string.toString();
@@ -2124,24 +2124,24 @@ var Utils = {
       return htmlEntities[m];
     });
   },
-
   regexpEscape: function regexpEscape(string) {
     if (typeof string === 'undefined' || string === null) return '';
     return String(string).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   },
-
   extend: function extend() {
     var args = [].slice.call(arguments);
     var target = args.shift();
+
     for (var i = 0, len = args.length; i < len; i++) {
       var source = args[i];
+
       for (var key in source) {
         if (source.hasOwnProperty(key)) target[key] = source[key];
       }
     }
   }
 };
-
-exports.default = Utils;
+var _default = Utils;
+exports["default"] = _default;
 
 },{}]},{},[7]);

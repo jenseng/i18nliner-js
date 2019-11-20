@@ -13,12 +13,14 @@
     "i18nliner": "./bin/i18nliner"
   },
   "devDependencies": {
-    "babel-preset-latest": "~6.22.0",
-    "browserify": "~14.1.0",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
     "chai": "~3.5.0",
     "eslint": "~3.16.1",
     "grunt": "~1.0.1",
-    "grunt-babel": "~6.0.0",
+    "grunt-babel": "^8",
     "grunt-browserify": "~5.0.0",
     "grunt-cli": "~1.2.0",
     "grunt-contrib-clean": "~1.0.0",
@@ -34,8 +36,8 @@
     "test": "./node_modules/.bin/grunt test && mocha tmp/test --recursive"
   },
   "dependencies": {
-    "babel-traverse": "^6.0.0",
-    "babylon": "^6.0.0",
+    "@babel/traverse": "^7",
+    "@babel/parser": "^7",
     "cli-color": "~1.2.0",
     "crc32": "~0.2.2",
     "gglobby": "0.0.3",
